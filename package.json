@@ -1,0 +1,29 @@
+{
+  "name":"to-the-skies",
+  "version":"0.0.0",
+  "description":"A piece of extensible interactive fiction, where users can add on to a choose-your-own adventure style piece of writing",
+  "license":"GPL-3.0",
+  "homepage":"http://markasoftware.com/to-the-skies/",
+  "author":{
+    "name": "Mark Polyakov",
+    "url": "http://markasoftware.com/"
+  },
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/markasoftware/to-the-skies.git"
+  },
+  "scripts":{
+    "test": "mocha; mocha-phantomjs"
+  },
+  "devDependencies": {
+    "chai": "^3.5",
+    "mocha-phantomjs": "^4",
+    "sinon": "^1.17"
+  },
+  "dependencies": {
+    "arangojs": "^4.3"
+  },
+  "engines": {
+    "node": "^5.6"
+  }
+}
