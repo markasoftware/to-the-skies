@@ -6,6 +6,10 @@ var path = require('path');
 
 describe('client side',function(){
 
+var $ = function(){
+    return document.querySelector.apply(document, arguments);
+}
+
 function readScriptSync(fileName){
     return fs.readFileSync(path.join(__dirname, '../src/scripts/', fileName), 'utf8');
 }
@@ -15,11 +19,11 @@ function clearBody(){
 }
 
 //JSYK, I know that this is a really overkill and unnecessary unit test. It is the first one I ever wrote, so I don't really give a shit. It was a good introduction to the woes of client-side unit testing in JavaScript, and it was fun to write
-describe('menu opener', function(){
+describe('menu manager', function(){
 
     var clock = sinon.useFakeTimers();
 
-    eval(readScriptSync('menu-opener.js'));
+    eval(readScriptSync('menu-manager.js'));
 
     beforeEach(function(){
         clearBody();
@@ -28,27 +32,32 @@ describe('menu opener', function(){
         menuIconMock.setAttribute('id','menu-icon');
         menuIconMock.style.left = '1em';
 
-        var menuMock = document.createElement('div');
+        var menuMock = document.createElement('header');
         menuMock.setAttribute('id','menu');
-        menuIconMock.style.left = '-8vw';
+        menuMock.style.left = '-8vw';
 
+        var menuCloseMock = document.createElement('img');
+        menuCloseMock.setAttribute('id','menu-close-icon');
+
+        menuMock.appendChild(menuCloseMock);
         document.body.appendChild(menuIconMock);
         document.body.appendChild(menuMock);
     });
 
     it('should not do anything when not clicked',function(){
         var beforeHTML = document.body.innerHTML;
-        menuOpener.registerEventListeners();
+        menuManager.registerEventListeners();
         clock.tick(5000);
         assert.equal(beforeHTML, document.body.innerHTML);
     });
 
     it('should move the icon out of view, and then menu into view, when clicked',function(){
-        menuOpener.registerEventListeners();
+        menuManager.registerEventListeners();
         var clickEvent = new Event('click');
         document.getElementById('menu-icon').dispatchEvent(clickEvent);
         //verify that menu icon was moved
         assert.equal(document.getElementById('menu-icon').style.left, '-1.5em');
+        assert.notEqual(parseInt(document.getElementById('menu').style.left), 0);
         
         clock.tick(400);
 
@@ -65,7 +74,7 @@ describe('caller',function(){
 
     it('should call the menu opener',function(){
         var funcMock = sinon.spy();
-        var menuOpener = {
+        var menuManager = {
             registerEventListeners: funcMock
         };
         eval(readScriptSync('index-caller.js'));
