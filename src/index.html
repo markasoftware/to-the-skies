@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To The Skies - A user-extendable sci-fi game</title>
+    <!--Include the Source Sans Pro font from Google Fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet'>
+    <style>
+        *{
+            margin: 0;
+        }
+        body{
+            background-color: #383838;
+            color: #eee;
+            font-family: "Source Sans Pro", "Droid Sans", sans-serif;
+        }
+        #description{
+            position: absolute;
+            text-align: center;
+            top: 30vh;
+            width: 70vw;
+            left: 15vw;
+            font-size: 20pt;
+        }
+        #logo{
+            font-size: 96pt;
+            font-weight: lighter;
+            margin-bottom: 3vh;
+
+        }
+        #menu-icon{
+            position: absolute;
+            top: 2em;
+            left: 1.5em;
+            cursor: pointer;
+            transition: all .4s ease-in-out;
+            width: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <img id="menu-icon" src='menu.svg'>
+    <div id="description">
+        <h1 id="logo">To The Skies</h1>
+        A sci-fi choose-your-own-adventure game where players can add their own content, creating a story that can last for weeks
+    </div>
+
+    <script src="scripts/menu-opener.js"></script>
+    <script src="scripts/index-caller.js"></script>
+
+</body>
+</html>
