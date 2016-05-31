@@ -13,7 +13,7 @@
     "url": "https://github.com/markasoftware/to-the-skies.git"
   },
   "scripts": {
-    "test": "mocha test/test.js"
+    "test": "sh ./test/run-tests.sh"
   },
   "devDependencies": {
     "chai": "^3.5",
