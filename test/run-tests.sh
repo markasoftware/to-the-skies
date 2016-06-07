@@ -1,7 +1,8 @@
 if [ -z "$1" ] ; then
     $0 cu su si;
-    exit 0;
+    exit $?;
 fi
+excode=0;
 if [ "$1" == "help" ] ; then
     echo "add parameters cu for client side unit, su for server side unit, si for server side integration, or a combination"
 else
@@ -13,5 +14,8 @@ else
             "si") ttr="server-integration" ;;
         esac
     mocha "./test/$ttr"
+    lexcode=$?;
+    [ $excode -gt $lexcode ] &&  echo '' || excode=$lexcode;
     done
 fi
+exit $excode;
