@@ -1,4 +1,5 @@
 # To The Skies
+[![Build Status](https://travis-ci.org/markasoftware/to-the-skies.svg?branch=master)](https://travis-ci.org/markasoftware/to-the-skies)
 To The Skies is an extensible work of interactive fiction. Basically, that means it's a choose your own adventure game, but people can add on to the "tree" of choices, meaning it could potentially be extremely large, and people could spend hours playing before reaching any sort of ending.
 ## What languages/frameworks/things does it use?
 HTML5/CSS3/JavaScript is used on the front-end, with no major frameworks. Node.js with Express is used on the back-end. PostgreSQL is the database used.
