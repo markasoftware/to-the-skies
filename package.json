@@ -20,6 +20,7 @@
     "jsdom": "^8.1.0",
     "jsdom-global": "^1.6.2",
     "mocha": "^2.4",
+    "rewire": "^2.5.1",
     "sinon": "^1.17",
     "supertest": "^1.2.0"
   },

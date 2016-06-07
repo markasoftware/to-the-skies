@@ -13,12 +13,14 @@ It will be completely free to play. It is possible that ads, in-game-purchases, 
 
 Important: If you just want to play To The Skies, this is not the right place for you. The following part of the readme is for people who want to contribute to To The Skies by helping to develop it.
 
+Also Important: This is not a good way to set up a fully functional server. I'd really only recommend it for testing and development. Following this guide to setup a server will result in something very insecure and not fit for production, due to things like default database passwords, default cookie secrets, etc.
+
 ### Dependencies:
 
 - Node.js and npm (Node Package Manager)
 - PostgreSQL
 - Git
-- Linux (probably will work on Mac too, but probably not Windows)
+- Linux (probably will work on Mac too, but not Windows)
 
 ### Getting the source code set up and stuff:
 
@@ -28,7 +30,8 @@ Important: If you just want to play To The Skies, this is not the right place fo
 ### Setting up the database:
 
 1. Start up PostgreSQL, listening on the default ports. This varies by operating system/distro, so figure it out.
-2. Create a new user named "to_the_skies_dev" with the password "password".
+2. Set your system account as a user in Postgres, with superuser permissions. Usually you can do this by becoming the Postgres user (`sudo -i -u postgres`), starting a Postgres shell (`psql`), then creating the user (`CREATE USER your_unix_username WITH SUPERUSER;`). This step is required. Unit tests will not run properly otherwise.
+2. Create a new user named "to_the_skies_dev" with the password "password" (`psql` then `CREATE USER to_the_skies_dev WITH PASSWORD password;`).
 3. Create the template database: `createdb to_the_skies_template -O to_the_skies_dev`
 4. Load the contents of the database from the sql dump located at `sql/template.sql`: `psql to_the_skies_template < sql/template.sql`
 5. Create the development database from the template: `createdb to_the_skies_dev -O to_the_skies_dev -T to_the_skies_template`
@@ -45,4 +48,4 @@ To The Skies uses 3 distinct types of tests: client side unit tests, server side
 
 ### Running the tests
 
-Run `npm test` to run all tests. Provide `--help` to see the options, which allow you to choose which tests to run. Without options it runs all tests. Before submitting a pull request, please ensure that your modified code passes ALL tests, and please write tests for most of your code, unless it is very trivial or very difficult to write tests for.
+Run `npm test` to run all tests. Provide `help` as a parameter (no hyphens or dashes) to see the options, which allow you to choose which tests to run. Without options it runs all tests. Before submitting a pull request, please ensure that your modified code passes ALL tests, and please write tests for most of your code, unless it is very trivial or very difficult to write tests for.
