@@ -1,4 +1,8 @@
-if [ -n $1 ] && [ $1 == "help" ] ; then
+if [ -z "$1" ] ; then
+    $0 cu su si;
+    exit 0;
+fi
+if [ "$1" == "help" ] ; then
     echo "add parameters cu for client side unit, su for server side unit, si for server side integration, or a combination"
 else
     for testid in "$@"

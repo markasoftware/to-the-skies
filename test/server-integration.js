@@ -10,14 +10,14 @@ process.env.DB_NAME = 'to_the_skies_test';
 //reset the database to the templatee
 function dropDB(done){
     console.log('drop database');
-    require('child_process').exec('dropdb to_the_skies_test', (err, stdout, stderr) => {
+    require('child_process').exec("psql -U postgres -c 'DROP DATABASE to_the_skies_test;'", (err, stdout, stderr) => {
         if(err && stderr.indexOf('does not exist') === -1) console.error('An error occuring dropping the database. stderr:' + stderr + ' stdout: ' + stdout);
         done();
     });
 }
 function createDB(done){
     console.log('create database');
-    require('child_process').exec('createdb to_the_skies_test --owner to_the_skies_dev --template to_the_skies_template', function(err, stdout, stderr){
+    require('child_process').exec("psql -U postgres -c 'CREATE DATABASE to_the_skies_test TEMPLATE to_the_skies_template'", function(err, stdout, stderr){
         if(err) console.error('An error occured creating the database. stderr: ' + stderr + ' stdout: ' + stdout);
         done();
     });
@@ -64,12 +64,12 @@ describe('server integration',function(){
         describe('login', () => {
 
             after(resetDB);
-
+/*
             it('should be able to insert new users', (done) => {
                 const dbInt = rewire(dbIntUrl);
                 //try to login with a new username
-                dbInt.__get__('login')('
             });
+            */
     });
 
     /*var login = function(agent, done){
@@ -107,4 +107,5 @@ describe('server integration',function(){
             });
         });
     });*/
+});
 });

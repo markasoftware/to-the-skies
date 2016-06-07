@@ -1,3 +1,4 @@
+/*
 describe('client unit',function(){
 
 var $ = function(){
