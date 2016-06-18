@@ -1,8 +1,6 @@
 language: node_js
 node_js:
     - "node"
-services:
-    - postgresql
 before_script:
     - psql -U postgres -c 'CREATE DATABASE to_the_skies_template;'
     - psql to_the_skies_template < ./sql/template.sql
