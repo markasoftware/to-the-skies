@@ -5,9 +5,9 @@ CREATE TABLE users (
 );
 CREATE TABLE nodes (
     nodeid serial PRIMARY KEY,
-    content varchar(140) NOT NULL,
-    opt1 varchar(40) NOT NULL,
-    opt2 varchar(40) NOT NULL
+    content varchar(100) NOT NULL,
+    opt1 varchar(45) NOT NULL,
+    opt2 varchar(45) NOT NULL
 );
 CREATE TABLE characters (
     characterid serial PRIMARY KEY,

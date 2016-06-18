@@ -1,5 +1,10 @@
-/*
+"use strict"
+
 describe('client unit',function(){
+
+});
+
+/*
 
 var $ = function(){
     return document.querySelector.apply(document, arguments);
@@ -66,3 +71,4 @@ describe('menu manager', function(){
 });
 
 });
+*/

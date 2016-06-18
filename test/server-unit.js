@@ -22,15 +22,25 @@ describe('server unit', () => {
         describe('connection string', () => {
 
             it('should have the correct default', () => {
-                assert.equal(rewire(dbIntUrl).__get__('conString'),
-                        'postgres://postgres:password@localhost/to_the_skies_dev');
+                assert.deepEqual(rewire(dbIntUrl).__get__('conConfig'),
+                        {
+                            user: 'postgres',
+                            password: 'password',
+                            host: 'localhost',
+                            database: 'to_the_skies_dev'
+                        });
             });
 
             it('should work with some modified vars', () => {
                 process.env.DB_PASS = 'urmomXDDD69';
                 process.env.DB_NAME = 'to_urmom_xddd_69';
-                assert.equal(rewire(dbIntUrl).__get__('conString'),
-                        'postgres://postgres:urmomXDDD69@localhost/to_urmom_xddd_69');
+                assert.deepEqual(rewire(dbIntUrl).__get__('conConfig'),
+                        {
+                            user: 'postgres',
+                            password: 'urmomXDDD69',
+                            host: 'localhost',
+                            database:'to_urmom_xddd_69'
+                        });
             });
 
             it('should work with all modified vars', () => {
@@ -38,8 +48,13 @@ describe('server unit', () => {
                 process.env.DB_PASS = 'oSH1Twaddup';
                 process.env.DB_HOST = 'reddit.com';
                 process.env.DB_NAME = 'signMEtheF%CKup';
-                assert.equal(rewire(dbIntUrl).__get__('conString'),
-                        'postgres://datBOI:oSH1Twaddup@reddit.com/signMEtheF%CKup');
+                assert.deepEqual(rewire(dbIntUrl).__get__('conConfig'),
+                        {
+                            user: 'datBOI',
+                            password: 'oSH1Twaddup',
+                            host: 'reddit.com',
+                            database: 'signMEtheF%CKup'
+                        });
             });
         });
     });

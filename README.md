@@ -1,5 +1,7 @@
 # To The Skies
+
 [![Build Status](https://travis-ci.org/markasoftware/to-the-skies.svg?branch=master)](https://travis-ci.org/markasoftware/to-the-skies)
+
 To The Skies is an extensible work of interactive fiction. Basically, that means it's a choose your own adventure game, but people can add on to the "tree" of choices, meaning it could potentially be extremely large, and people could spend hours playing before reaching any sort of ending.
 ## What languages/frameworks/things does it use?
 HTML5/CSS3/JavaScript is used on the front-end, with no major frameworks. Node.js with Express is used on the back-end. PostgreSQL is the database used.
@@ -45,7 +47,7 @@ The server is located at `src/server.js`, so just run that with node (`node src/
 
 ### About the tests
 
-To The Skies uses 3 distinct types of tests: client side unit tests, server side unit tests, and server side integration tests. There are no client side unit tests because anything that they would test can be really easily tested "by hand", and integration tests that interact with the UI, deal with the DOM, etc are hard to write and maintain. The server side unit tests are used where unit tests make sense and don't take excessive effort to write. Integration tests cover everything. Note that the client side tests aren't actually run on the client side, they're run in node.js and 
+To The Skies uses 4 distinct types of tests: client side unit tests, server side unit tests, and server side integration tests, and database tests. The database tests test code that interacts with the database. I felt like they did not fit in with the other server side tests because they are unit-ish tests, because they test one thing at a time, but they aren't exactly isolated because they require a live database. There are no client side integration tests because anything that they would test can be really easily tested "by hand", and integration tests that interact with the UI, deal with the DOM, etc are hard to write and maintain compared to the benefits they provide. The server side unit tests are used where unit tests make sense and don't take excessive effort to write. Integration tests cover pretty much everything. Note that the client side tests aren't actually run on the client side, they're run in node.js and use jsdom to emulate a DOM.
 
 ### Running the tests
 
