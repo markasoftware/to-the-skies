@@ -16,5 +16,6 @@ addons:
     postgresql: 9.5
 env:
     global:
-        - PGPORT=5432
+        - PGPORT=5433
+        - DB_PORT=5433
 sudo: required
