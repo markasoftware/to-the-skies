@@ -27,6 +27,7 @@ describe('server unit', () => {
                             user: 'postgres',
                             password: 'password',
                             host: 'localhost',
+                            port: '5432',
                             database: 'to_the_skies_dev'
                         });
             });
@@ -39,6 +40,7 @@ describe('server unit', () => {
                             user: 'postgres',
                             password: 'urmomXDDD69',
                             host: 'localhost',
+                            port: '5432',
                             database:'to_urmom_xddd_69'
                         });
             });
@@ -47,12 +49,14 @@ describe('server unit', () => {
                 process.env.DB_USER = 'datBOI';
                 process.env.DB_PASS = 'oSH1Twaddup';
                 process.env.DB_HOST = 'reddit.com';
+                process.env.DB_PORT = '6969';
                 process.env.DB_NAME = 'signMEtheF%CKup';
                 assert.deepEqual(rewire(dbIntUrl).__get__('conConfig'),
                         {
                             user: 'datBOI',
                             password: 'oSH1Twaddup',
                             host: 'reddit.com',
+                            port: '6969',
                             database: 'signMEtheF%CKup'
                         });
             });
