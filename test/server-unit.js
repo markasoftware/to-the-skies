@@ -9,15 +9,13 @@ const dbIntUrl = '../src/db-interface.js';
 describe('server unit', () => {
     describe('environment variables check', () => {
 
-        //backup environment variables
-        let enviroBackup = {};
-
-        before(() => { Object.assign(enviroBackup, process.env) });
         beforeEach(() => {
             if(require.cache[require.resolve(dbIntUrl)])
                 delete require.cache[require.resolve(dbIntUrl)];
+            ['DB_HOST', 'DB_PORT', 'DB_USER', 'DB_PASS', 'DB_NAME'].forEach((curKey) => {
+                delete process.env[curKey];
+            });
         });
-        afterEach(() => { Object.assign(process.env, enviroBackup) });
 
         describe('connection string', () => {
 
