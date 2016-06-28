@@ -19,7 +19,8 @@ module.exports.login = async((googleID) => {
     return new Promise((resolve, reject) => {
         let row;
         try {
-            row = await(db.one('INSERT INTO users (googleid) VALUES ($1) ON CONFLICT DO NOTHING RETURNING userid', [googleID]));
+            //i dont know how this works. Hopefully pg 9.5 support will be added to semaphore before it matters
+            row = await(db.one('INSERT INTO users (googleid) SELECT ($1) WHERE NOT EXISTS (SELECT * FROM USERS WHERE googleid=$1); SELECT userid FROM users WHERE googleid=$1', [googleID]));
         }
         catch (err) {
             return reject(new Error('query error: ' + err));

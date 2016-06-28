@@ -14,9 +14,10 @@ else
             "si") ttr="server-integration" ;;
             "db") ttr="db" ;;
         esac
-    mocha "./test/$ttr"
+    # disabling colors because the solarized color scheme is weird
+    mocha "./test/$ttr" -C
     lexcode=$?;
-    [ $excode -gt $lexcode ] &&  echo '' || excode=$lexcode;
+    [ $excode -gt $lexcode ] && echo '' || excode=$lexcode;
     done
 fi
 exit $excode;
