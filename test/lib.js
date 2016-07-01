@@ -2,10 +2,28 @@
 
 const urls = require('./urls.js');
 const rewire = require('rewire');
+const express = require('express');
+
+//general
+
+process.env.DB_NAME = 'to_the_skies_test';
+
+module.exports.unCache = (url) => {
+    if(require.cache[require.resolve(url)])
+        delete require.cache[require.resolve(url)];
+}
+
+//integration/routers
+
+module.exports.appify = (router) => {
+    const app = express();
+    app.use(router);
+    return app;
+}
 
 //database
 
-const dbUser = process.env.DB_USER || 'to_the_skies_dev';
+const dbUser = process.env.DB_USER || 'to_the_skies';
 
 function dropDB(done){
     require('child_process').exec('dropdb to_the_skies_test', (err, stdout, stderr) => {

@@ -1,9 +1,13 @@
-const baseURL = '../src/ss-scripts/';
+const baseURL = '../src/';
+const routerURL = 'routers/';
+const libURL = 'lib/';
 
-const urls = {
+const libs = {
     dbInt: 'db-interface.js'
 }
 
-Object.keys(urls).forEach((curKey) => {
-    module.exports[curKey] = baseURL + urls[curKey]
+Object.keys(libs).forEach((curKey) => {
+    module.exports[curKey] = baseURL + routerURL + libURL + libs[curKey];
 });
+
+module.exports.server = baseURL + 'server.js';

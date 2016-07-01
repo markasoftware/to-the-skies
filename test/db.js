@@ -5,18 +5,15 @@ const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 
 const urls = require('./urls.js');
-const dbIntUrl = urls.dbInt;
 
 const lib = require('./lib.js');
-
-//database connection stuff
-process.env.DB_NAME = 'to_the_skies_test';
 
 //reset the database to the templatee
 
 describe('database', () => {
 
-    let dbInt = rewire(dbIntUrl);
+    let dbInt = rewire(urls.dbInt);
+    const db = dbInt.__get__('db');
 
     before(lib.resetDB);
 
@@ -24,7 +21,7 @@ describe('database', () => {
 
     it('should be able to connect to the database', async(() => {
         const row = await(dbInt.__get__('db').one('SELECT COUNT(*) FROM nodes;'));
-        assert.isAbove(row.count, 0, 'there should be at least 1 node in the nodes table');
+        assert.isOk(row.count, 'should have a result in the row');
         const row2 = await(dbInt.__get__('db').one('SELECT current_database();'));
         assert.equal(row2.current_database, 'to_the_skies_test', 'current database name');
     }));
@@ -43,20 +40,52 @@ describe('database', () => {
             assert.equal(row.googleid, '133769690000000000000', 'googleid is correct');
             lastUserID = returnedUserID;
         }));
+
         it('should return the same user id the second time', async(() => {
             //same googleid as last time
-            const row = await(dbInt.__get__('db').one('SELECT userid FROM users WHERE googleid=\'133769690000000000000\''));
-            assert.equal(row.userid, lastUserID);
+            const returnedUserID = await(dbInt.login('133769690000000000000'));
+            assert.equal(returnedUserID, lastUserID);
         }));
-        it('should not allow weird-ass google ids', async(() => {
+
+        it('should not allow long google ids', async(() => {
             try {
                 await(dbInt.login('ad,.clgdhpgcdbkcgxbegclu,.cgxbpcgd,.pucgloebcugd,.cgypd'));
             } catch (err) {
                 assert.isOk(err);
                 return;
             }
-            //if we get here there was no error
-            assert.fail(0, 1, 'query should throw an error');
+            assert.fail(0, 1, 'didn\'t throw error');
+        }));
+        
+        it('should not allow short google ids', async(() => {
+            try {
+                await(dbInt.login('hcroedu'));
+            } catch (err) {
+                assert.isOk(err);
+                return;
+            }
+            assert.fail(0, 1, 'didn\'t throw error');
+        }));
+
+        it('should not allow blank google ids', async(() => {
+            try {
+                await(dbInt.login());
+            } catch (err) {
+                assert.isOk(err);
+                return;
+            }
+            assert.fail(0, 1, 'didn\'t throw error');
+        }));
+
+        it('should not allow non-string google ids', async(() => {
+            //21 terms long, so length will make it think it's valid
+            try {
+                await(dbInt.login([1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1]));
+            } catch (err) {
+                assert.isOk(err);
+                return;
+            }
+            assert.fail(0, 1, 'didn\'t throw error');
         }));
     });
 });

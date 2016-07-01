@@ -3,15 +3,12 @@
 const sinon = require('sinon');
 const rewire = require('rewire');
 const assert = require('chai').assert;
-
-const dbIntUrl = '../src/db-interface.js';
+const urls = require('./urls.js');
 
 describe('server unit', () => {
     describe('environment variables check', () => {
 
         beforeEach(() => {
-            if(require.cache[require.resolve(dbIntUrl)])
-                delete require.cache[require.resolve(dbIntUrl)];
             ['DB_HOST', 'DB_PORT', 'DB_USER', 'DB_PASS', 'DB_NAME'].forEach((curKey) => {
                 delete process.env[curKey];
             });
@@ -20,9 +17,9 @@ describe('server unit', () => {
         describe('connection string', () => {
 
             it('should have the correct default', () => {
-                assert.deepEqual(rewire(dbIntUrl).__get__('conConfig'),
+                assert.deepEqual(rewire(urls.dbInt).__get__('conConfig'),
                         {
-                            user: 'postgres',
+                            user: 'to_the_skies',
                             password: 'password',
                             host: 'localhost',
                             port: '5432',
@@ -33,9 +30,9 @@ describe('server unit', () => {
             it('should work with some modified vars', () => {
                 process.env.DB_PASS = 'urmomXDDD69';
                 process.env.DB_NAME = 'to_urmom_xddd_69';
-                assert.deepEqual(rewire(dbIntUrl).__get__('conConfig'),
+                assert.deepEqual(rewire(urls.dbInt).__get__('conConfig'),
                         {
-                            user: 'postgres',
+                            user: 'to_the_skies',
                             password: 'urmomXDDD69',
                             host: 'localhost',
                             port: '5432',
@@ -49,7 +46,7 @@ describe('server unit', () => {
                 process.env.DB_HOST = 'reddit.com';
                 process.env.DB_PORT = '6969';
                 process.env.DB_NAME = 'signMEtheF%CKup';
-                assert.deepEqual(rewire(dbIntUrl).__get__('conConfig'),
+                assert.deepEqual(rewire(urls.dbInt).__get__('conConfig'),
                         {
                             user: 'datBOI',
                             password: 'oSH1Twaddup',

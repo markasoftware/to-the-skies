@@ -1,0 +1,76 @@
+:root {
+    --bg: #383838;
+    --menu-row-height: 11vh;
+}
+*{
+    margin: 0;
+}
+body{
+    background-color: var(--bg);
+    color: #eee;
+    font-family: "Source Sans Pro", "Droid Sans", sans-serif;
+}
+a, .a{
+    text-decoration: none;
+    color: inherit;
+}
+a:hover, .a:hover{
+    text-decoration: underline;
+}
+#description{
+    position: absolute;
+    text-align: center;
+    top: 30vh;
+    width: 70vw;
+    left: 15vw;
+    font-size: 20pt;
+}
+#logo{
+    font-size: 96pt;
+    font-weight: lighter;
+    margin-bottom: 3vh;
+
+}
+#menu-icon{
+    position: absolute;
+    top: 2em;
+    left: 1.5em;
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+    width: 1.5em;
+}
+nav{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 16vw;
+    position: absolute;
+    height: 100vh;
+    left: -16vw;
+    transition: all .4s ease-in-out;
+    z-index: 100;
+}
+#menu-close-icon{
+    --close-icon-height: 6vh;
+    height: var(--close-icon-height);
+    position: relative;
+    /*there's probably a better way to do this, with a flexbox. But I don't really care*/
+    top: calc((var(--menu-row-height) - var(--close-icon-height)) / 2);
+    transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    cursor: pointer;
+}
+#close-icon-row{
+    order: -1;
+}
+#login-row{
+    order: 0;
+}
+.menu-row{
+    --height: 11vh;
+    font-size: 3vh;
+    flex-basis: var(--menu-row-height);
+    line-height: var(--menu-row-height);
+    text-align: center;
+    border-bottom: 2px solid #eee;
+}
