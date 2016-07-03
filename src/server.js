@@ -8,8 +8,9 @@ const FileStore = require('session-file-store')(session);
 
 //basic middleware
 
-app.use(express.static('public'));
+app.use(express.static(`${__dirname}/public`));
 app.use(session({
+    path: `${__dirname}/../sessions`,
     store: new FileStore({
         ttl: 20 * 24 * 60 * 60
     }),
