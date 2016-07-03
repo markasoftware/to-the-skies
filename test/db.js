@@ -26,7 +26,7 @@ describe('database', () => {
         assert.equal(row2.current_database, 'to_the_skies_test', 'current database name');
     }));
     describe('login', () => {
-        
+
         before(lib.resetDB);
 
         let lastUserID;

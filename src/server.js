@@ -5,7 +5,6 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
-const passport = require('passport');
 
 //basic middleware
 

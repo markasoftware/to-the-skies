@@ -3,7 +3,8 @@ const routerURL = 'routers/';
 const libURL = 'lib/';
 
 const libs = {
-    dbInt: 'db-interface.js'
+    dbInt: 'db-interface.js',
+    prom: 'promise-router.js'
 }
 
 Object.keys(libs).forEach((curKey) => {

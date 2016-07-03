@@ -13,6 +13,10 @@ module.exports.unCache = (url) => {
         delete require.cache[require.resolve(url)];
 }
 
+module.exports.throwErr = (err) => {
+    throw err;
+}
+
 //integration/routers
 
 module.exports.appify = (router) => {
@@ -22,6 +26,8 @@ module.exports.appify = (router) => {
 }
 
 //database
+
+module.exports.db = rewire(urls.dbInt).__get__('db');
 
 const dbUser = process.env.DB_USER || 'to_the_skies';
 
@@ -37,7 +43,10 @@ function createDB(done){
         done();
     });
 }
-module.exports.resetDB = (done) => {
+//this is not an arrow function because arrow functions mess up the 'this' variable for 'this.timeout'
+module.exports.resetDB = function(done) {
+    //on slower devices it can take longer than the default 2000ms for the database to reset
+    this.timeout(5000);
     dropDB(() => {
         createDB(done);
     });

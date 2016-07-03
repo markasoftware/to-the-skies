@@ -1,5 +1,5 @@
 if [ -z "$1" ] ; then
-    $0 cu su db lg;
+    $0 cu su db lg ;
     exit $?;
 fi
 excode=0;
