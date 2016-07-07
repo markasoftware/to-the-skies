@@ -3,6 +3,7 @@
 const urls = require('./urls.js');
 const rewire = require('rewire');
 const express = require('express');
+const fs = require('fs');
 
 //general
 
@@ -15,6 +16,10 @@ module.exports.unCache = (url) => {
 
 module.exports.throwErr = (err) => {
     throw err;
+}
+
+module.exports.getRaw = (filePath) => {
+    return fs.readFileSync(filePath, 'utf8');
 }
 
 //integration/routers
@@ -50,4 +55,13 @@ module.exports.resetDB = function(done) {
     dropDB(() => {
         createDB(done);
     });
+}
+
+//login
+
+module.exports.login = (agent, id) => {
+    return (agent
+        .get('/auth/google/callback?id=' + id)
+        .expect('set-cookie', /^connect\.sid=s.{20,}/)
+        .expect(302));
 }

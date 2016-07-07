@@ -1,0 +1,14 @@
+#description{
+    position: absolute;
+    text-align: center;
+    top: 30vh;
+    width: 70vw;
+    left: 15vw;
+    font-size: 20pt;
+}
+#logo{
+    font-size: 96pt;
+    font-weight: lighter;
+    margin-bottom: 3vh;
+
+}

@@ -12,24 +12,17 @@ body{
 }
 a, .a{
     text-decoration: none;
-    color: inherit;
+    color: #bbeeff;
+    border-bottom: 2px dotted white;
+    cursor: pointer;
 }
 a:hover, .a:hover{
-    text-decoration: underline;
+    border-bottom: 2px solid white;
 }
-#description{
+#main-wrap{
+    width: 100vw;
+    height: 100vh;
     position: absolute;
-    text-align: center;
-    top: 30vh;
-    width: 70vw;
-    left: 15vw;
-    font-size: 20pt;
-}
-#logo{
-    font-size: 96pt;
-    font-weight: lighter;
-    margin-bottom: 3vh;
-
 }
 #menu-icon{
     position: absolute;
@@ -39,7 +32,7 @@ a:hover, .a:hover{
     transition: all .4s ease-in-out;
     width: 1.5em;
 }
-nav{
+#left-menu{
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -67,7 +60,6 @@ nav{
     order: 0;
 }
 .menu-row{
-    --height: 11vh;
     font-size: 3vh;
     flex-basis: var(--menu-row-height);
     line-height: var(--menu-row-height);

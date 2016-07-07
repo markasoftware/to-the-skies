@@ -23,5 +23,6 @@ app.use(session({
 //main routers
 
 app.use(require('./routers/login.js'));
+app.use('/api/user', require('./routers/user.js'));
 
 module.exports = app;
