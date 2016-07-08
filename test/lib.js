@@ -57,6 +57,14 @@ module.exports.resetDB = function(done) {
     });
 }
 
+module.exports.resetDBPromise = () => {
+    return new Promise((resolve, reject) => {
+        try {
+            dropDB(() => { createDB(resolve) });
+        } catch (e) { reject(e) }
+    });
+};
+
 //login
 
 module.exports.login = (agent, id) => {

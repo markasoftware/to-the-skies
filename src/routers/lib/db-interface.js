@@ -31,4 +31,19 @@ module.exports.login = async((googleID) => {
     return row.userid;
 });
 
+module.exports.characters = {
+    get: async((userid) => {
+        let rows;
+        try {
+            rows = await(db.query(
+                "SELECT name, position FROM characters WHERE userid = $1",
+                [userid]
+            ));
+        } catch (e) {
+            throw 'Query Error: ' + e;
+        }
+        return rows;
+    })
+}
+
 module.exports.terminateConnections = () => { pgp.end(); };

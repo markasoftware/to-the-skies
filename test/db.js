@@ -25,6 +25,10 @@ describe('database', () => {
         const row2 = await(dbInt.__get__('db').one('SELECT current_database();'));
         assert.equal(row2.current_database, 'to_the_skies_test', 'current database name');
     }));
+
+    ////////////////////////////
+    ////////////////////////////
+    ////////////////////////////
     describe('login', () => {
 
         before(lib.resetDB);
@@ -87,5 +91,55 @@ describe('database', () => {
             }
             assert.fail(0, 1, 'didn\'t throw error');
         }));
+    });
+    
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+    describe('characters', () => {
+        describe('get', () => {
+
+            before(async(function(){
+                this.timeout(5000);
+                await(lib.resetDBPromise());
+                await(db.none(
+                    "INSERT INTO users (googleid) VALUES ('123456789012345678901');"
+                ));
+                await(db.none(
+                    "INSERT INTO users (googleid) VALUES ('098765432109876543210');"
+                ));
+                await(db.none(
+                    "INSERT INTO characters (userid, name, position) VALUES (2, 'Mark', 1);"
+                ));
+                await(db.none(
+                    "INSERT INTO characters (userid, name, position) VALUES (2, 'Bl0@pMeUp', 2);"
+                ));
+                await(db.none(
+                    "INSERT INTO characters (userid, name, position) VALUES (2, 'datboi', 3);"
+                ));
+            }));
+
+            it('should return an array', async(() => {
+                const charList = await(dbInt.characters.get('2'));
+                assert.isArray(charList);
+            }));
+            it('should get the right number of characters', async(() => {
+                const charList = await(dbInt.characters.get('2'));
+                assert.equal(charList.length, 3);
+            }));
+            it('should get the correct characters', async(() => {
+                const charList = await(dbInt.characters.get('2'));
+                assert.equal(charList[0].name, 'Mark');
+                assert.equal(charList[1].name, 'Bl0@pMeUp');
+                assert.equal(charList[2].name, 'datboi');
+                assert.equal(charList[0].position, '1');
+                assert.equal(charList[1].position, '2');
+                assert.equal(charList[2].position, '3');
+            }));
+            it('should not give any characters for a user without any', async(() => {
+                const charList = await(dbInt.characters.get('3'));
+                assert.deepEqual(charList, []);
+            }));
+        });
     });
 });
