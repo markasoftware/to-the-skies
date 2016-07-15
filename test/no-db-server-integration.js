@@ -1,7 +1,6 @@
 const supertest = require('supertest-as-promised')(Promise);
 const assert = require('chai').assert;
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
+const sinon = require('sinon');
 
 const urls = require('./urls.js');
 const lib = require('./lib.js');

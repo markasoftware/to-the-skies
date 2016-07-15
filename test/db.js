@@ -8,7 +8,7 @@ const urls = require('./urls.js');
 
 const lib = require('./lib.js');
 
-//reset the database to the templatee
+//reset the database to the template
 
 describe('database', () => {
 
@@ -139,6 +139,45 @@ describe('database', () => {
             it('should not give any characters for a user without any', async(() => {
                 const charList = await(dbInt.characters.get('3'));
                 assert.deepEqual(charList, []);
+            }));
+        });
+
+        describe('insert', () => {
+
+            before(lib.resetDB);
+
+            it('should have basic insertion capabilities', async(() => {
+                const userID = await(lib.newUser(db));
+                await(dbInt.characters.insert(userID, 'iarecat'));
+                const catRow = await(db.one("SELECT * FROM characters WHERE name = 'iarecat';"));
+                assert.equal(catRow.name, 'iarecat');
+                assert.equal(catRow.userid, userID);
+                assert.equal(catRow.nodeid, '1');
+            }));
+            it('should return the character id', async(() => {
+                const userID = await(lib.newUser(db));
+                const returnedID = await(dbInt.characters.insert(userID, 'whatisafupa'));
+                const realID = await(db.one(
+                    "SELECT characterid FROM characters WHERE name = 'whatisafupa';"
+                )).characterid;
+                assert.equal(returnedID, realID);
+            }));
+                    
+            it('should start at position 1', async(() => {
+                const userID = await(lib.newUser(db));
+                await(dbInt.characters.insert(userID, 'iaredatboi'));
+                const datboiRow = await(db.one("SELECT * FROM characters WHERE name = 'iaredatboi'"));
+                assert.equal(datboiRow.position, 0);
+            }));
+            it('should use incrementing positions', async(() => {
+                const userID = await(lib.newUser(db));
+                await(dbInt.characters.insert(userID, 'isaacasimov'));
+                await(dbInt.characters.insert(userID, 'arthurclarke'));
+                await(dbInt.characters.insert(userID, 'drseuss'));
+                const arthurPos = await(db.one("SELECT position FROM characters WHERE name = 'arthurclarke';")).position;
+                const seussPos = await(db.one("SELECT position FROM characters WHERE name = 'drseuss';")).position;
+                assert.equal(arthurPos, 1);
+                assert.equal(seussPos, 2);
             }));
         });
     });

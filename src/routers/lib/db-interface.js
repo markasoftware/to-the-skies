@@ -36,14 +36,29 @@ module.exports.characters = {
         let rows;
         try {
             rows = await(db.query(
-                "SELECT name, position FROM characters WHERE userid = $1",
+                "SELECT name, position, characterid FROM characters WHERE userid = $1",
                 [userid]
             ));
         } catch (e) {
             throw 'Query Error: ' + e;
         }
         return rows;
+    }),
+    insert: async((userid, name) => {
+        const maxPosQueryRes = await(db.oneOrNone(
+            "SELECT MAX(position) FROM characters WHERE userid = $1",
+            [userid]
+        ));
+        const nextPos = typeof maxPosQueryRes.max == 'number' ?
+            maxPosQueryRes.max + 1 :
+            0;
+        const charID = await(db.one(
+            "INSERT INTO characters (userid, name, position) VALUES ($1, $2, $3) RETURNING characterid;",
+            [userid, name, nextPos]
+        )).characterid;
+        return charID;
     })
-}
+}    
+
 
 module.exports.terminateConnections = () => { pgp.end(); };

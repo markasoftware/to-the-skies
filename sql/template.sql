@@ -15,9 +15,9 @@ CREATE TABLE characters (
     userid int NOT NULL REFERENCES users (userid),
     position int NOT NULL,
     name varchar(30) NOT NULL,
-    curnode int NOT NULL DEFAULT 1 REFERENCES nodes (nodeid)
+    nodeid int NOT NULL DEFAULT 1 REFERENCES nodes (nodeid)
 );
 
 -- insert dummy data
-INSERT INTO users (googleid) VALUES (000000000000000000000);
+INSERT INTO users (googleid) VALUES ('000000000000000000000');
 INSERT INTO nodes (userid, content, opt1, opt2) VALUES (1, 'Hello', 'Yes', 'Ni Hao');

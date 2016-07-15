@@ -1,9 +1,14 @@
+'use strict';
 //this file has general purpose functions used throughout the tests
 
 const urls = require('./urls.js');
 const rewire = require('rewire');
 const express = require('express');
 const fs = require('fs');
+global.async = require('asyncawait/async');
+global.await = require('asyncawait/await');
+global.assert = require('chai').assert;
+const chance = require('chance')();
 
 //general
 
@@ -20,6 +25,10 @@ module.exports.throwErr = (err) => {
 
 module.exports.getRaw = (filePath) => {
     return fs.readFileSync(filePath, 'utf8');
+}
+
+module.exports.getRandID = () => {
+    return chance.string({length: 21, pool: '1234567890'});
 }
 
 //integration/routers
@@ -64,6 +73,13 @@ module.exports.resetDBPromise = () => {
         } catch (e) { reject(e) }
     });
 };
+
+module.exports.newUser = async((db) => {
+    return await(db.one(
+        "INSERT INTO users (googleid) VALUES ($1) RETURNING userid;",
+        [module.exports.getRandID()]
+    )).userid;
+});
 
 //login
 

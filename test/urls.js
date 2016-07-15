@@ -5,7 +5,10 @@ const clientScriptsURL = 'public/scripts/'
 
 const libs = {
     dbInt: 'db-interface.js',
-    prom: 'promise-router.js'
+    apiUtils: 'api-utils.js'
+}
+const routers = {
+    charApi: 'characters-logic.js'
 }
 const clientScripts = {
     mithril: 'mithril.min.js',
@@ -19,6 +22,9 @@ Object.keys(libs).forEach((curKey) => {
 
 Object.keys(clientScripts).forEach((curKey) => {
     module.exports[curKey] = baseURL + clientScriptsURL + clientScripts[curKey];
+});
+Object.keys(routers).forEach((curKey) => {
+    module.exports[curKey] = baseURL + routerURL + routers[curKey];
 });
 
 module.exports.server = baseURL + 'server.js';
