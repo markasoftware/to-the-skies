@@ -58,4 +58,19 @@ describe('Login integration', () => {
             assert.equal(dbID, returnedID);
         }));
     });
+    describe('?li parameter setting', () => {
+        it('should redirect from /?li to / when not logged in', async(() => {
+            const agent = supertest.agent(server);
+            const res = await(agent.get('/?li'));
+            assert.equal(res.status, 302, 'did not give 302');
+            assert.equal(res.headers['location'], '/', 'did not redirect to /');
+        }));
+        it('should redirect from / to /?li when logged in', async(() => {
+            const agent = supertest.agent(server);
+            await(lib.login(agent, '123456789012345678901'));
+            const res = await(agent.get('/'));
+            assert.equal(res.status, 302, 'did not give 302');
+            assert.equal(res.headers['location'], '/?li', 'did not redirect to /?li');
+        }));
+    });
 });

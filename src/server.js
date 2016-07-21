@@ -6,9 +6,6 @@ const app = express();
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 
-//basic middleware
-
-app.use(express.static(`${__dirname}/public`));
 app.use(session({
     path: `${__dirname}/../sessions`,
     store: new FileStore({
@@ -23,7 +20,9 @@ app.use(session({
 //main routers
 
 app.use(require('./routers/login.js'));
-app.use('/api/user', require('./routers/user.js'));
+app.use(require('./routers/homepage.js'));
 app.use('/api/characters', require('./routers/characters.js'))
+
+app.use(express.static(`${__dirname}/public`));
 
 module.exports = app;

@@ -13,18 +13,16 @@ describe('general server side integration', () => {
     });
 
     describe('static file serving', () => {
-        it('should give 200 and html for /index.html', async(() => {
-            const res = await(agent.get('/index.html'));
+        it('should give 200 and html for /', async(() => {
+            const res = await(agent.get('/'));
             assert.equal(res.status, 200, 'did not give http 200');
             assert.include(res.headers['content-type'], 'text/html', 'did not have html type header');
         }));
 
-        it('should return the same thing for / and /index.html', async(() => {
-            const resSlash = await(agent.get('/'));
-            const resIndex = await(agent.get('/index.html'));
-            assert.equal(resSlash.status, 200, 'did not give http 200');
-            assert.equal(resIndex.status, 200, 'did not give http 200');
-            assert.equal(resSlash.text, resIndex.text, 'did not have equivalent contents');
+        it('should redirect from /index.html to /', async(() => {
+            const res = await(agent.get('/index.html'));
+            assert.equal(res.status, 302, 'did not give http 302');
+            assert.equal(res.headers['location'], '/', 'did not redirect to /');
         }));
 
         it('should give 404 and html for non-existant page', async(() => {

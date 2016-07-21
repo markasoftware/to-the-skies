@@ -13,6 +13,12 @@ menu.view = function(ctrl) {
             ])
         );
     }
+
+    if(ctrl.loggedIn()) {
+        ctrl.characterList().forEach(function( curChar ) {
+            toReturn.push( m.component( character, curChar ) );
+        });
+    }
     
     return toReturn;
 }
