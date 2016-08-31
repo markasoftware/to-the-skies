@@ -7,7 +7,6 @@ if [ "$1" == "help" ] ; then
     echo 'Use the following parameters to specify which tests to run. A combination of them is ok.'
     echo 'cu: Client-side';
     echo 'su: Server-side Unit';
-    echo 'db: Server-side DB Interface Unit-ish';
     echo 'lg: Server-side Login Integration';
     echo 'nd: Server-side Integration without DB interaction';
     echo 'ac: Server-side Character API integration';
@@ -16,9 +15,8 @@ else
     for testid in "$@"
     do
         case "$testid" in
-            "cu") ttr="client.js" ;;
+            "cu") ttr="*.cu.js" ;;
             "su") ttr="*.su.js" ;;
-            "db") ttr="db.js" ;;
             "lg") ttr="login.js" ;;
             "nd") ttr="no-db-server-integration.js" ;;
             "ac") ttr="characters-api.js" ;;

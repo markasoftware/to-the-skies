@@ -8,8 +8,8 @@ const urls = require('./urls.js');
 const server = require(urls.server);
 
 describe('Character API', () => {
-
-    let agent, userID;
+    let agent;
+    let userID;
 
     beforeEach(() => {
         agent = supertest.agent(server);
@@ -46,19 +46,28 @@ describe('Character API', () => {
             const res = await(agent.get('/api/characters/create?name=boop'));
             assert.equal(res.status, 200, 'status was not 200');
         }));
+        it('should give a json response with correct data types and name', async(() => {
+            await(lib.login(agent, userID));
+            const res = await(agent.get('/api/characters/create?name=foopus'));
+            const parsed = JSON.parse(res.text);
+            assert.isObject(parsed);
+            assert.isNumber(parsed.characterid);
+            assert.isNumber(parsed.position);
+            assert.equal(parsed.name, 'foopus');
+        }));
+        // we could test multiple ones to verify that the characterid and position
+        // are different/correct every time, but I've already written the get/create
+        // tests and doing them again here would take more work. And anyways, the current
+        // tests should be enough to verify the basic functionality
     });
-    describe('get and new', () => {
+    describe('get and create', () => {
         it('should insert then get a single row properly', async(() => {
             await(lib.login(agent, userID));
             const newRes = await(agent.get('/api/characters/create?name=boop'));
-            const createdCharID = JSON.parse(newRes.text);
+            const createdChar = JSON.parse(newRes.text);
             const res = await(agent.get('/api/characters/get'));
             const jsonRes = JSON.parse(res.text);
-            const shouldEqual = [{
-                    characterid: createdCharID,
-                    position: 0,
-                    name: 'boop'
-                }]
+            const shouldEqual = [createdChar];
             assert.deepEqual(jsonRes, shouldEqual, 'resulting JSON incorrect');
         }));
         it('should return multiple rows properly', async(() => {

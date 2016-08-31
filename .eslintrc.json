@@ -1,0 +1,32 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+        "browser": true,
+        "node": true,
+        "mocha": true
+    },
+    "parserOptions": {
+        "sourceType": "script",
+        "ecmaFeatures": {
+            "impliedStrict": false
+        }
+    },
+    "globals": {
+        "async": true,
+        "await": true
+    },
+    "rules": {
+        "strict": ["error", "global"],
+        "indent": ["error", 4],
+        "new-cap": ["error",
+            {
+                "capIsNewExceptions": [ "Router" ]
+            }
+        ],
+        "no-unused-vars": "off",
+        "max-len": ["error", 100],
+        "no-console": "off",
+        "global-require": "off"
+
+    }
+}

@@ -1,7 +1,6 @@
 'use strict';
 
 const supertest = require('supertest-as-promised')(Promise);
-const assert = require('chai').assert;
 const rewire = require('rewire');
 
 const urls = require('./urls.js');
@@ -9,8 +8,11 @@ const lib = require('./lib.js');
 const db = lib.db;
 let server;
 
-//we can't test login all that well without a live google API key and all, so these tests may be lacking
-//If you are making changes to the login system, be sure to manually test the login thorugh Google thoroughly
+// we can't test login all that well without a live
+// google API key and all, so these tests may be lacking.
+// If you are making changes to the login system, be sure to
+// manually test the login thorugh Google thoroughly
+
 describe('Login integration', () => {
     beforeEach(() => {
         lib.unCache(urls.server);
@@ -18,11 +20,10 @@ describe('Login integration', () => {
     });
     before(lib.resetDB);
     describe('login', () => {
-
         it('should work with basic login', async(() => {
             const agent = supertest.agent(server);
-            //the asserts in login should deal with this
-            await(lib.login(agent,'098765432109876543210'));
+            // the asserts in login should deal with this
+            await(lib.login(agent, '098765432109876543210'));
         }));
 
         it('should insert into the database when logging in', async(() => {
@@ -30,7 +31,9 @@ describe('Login integration', () => {
             const maxUserId = await(db.one('SELECT MAX(userid) FROM users')).max;
             const agent = supertest.agent(server);
             await(lib.login(agent, '123456789012345678901'));
-            const row = await(db.one('SELECT * FROM users WHERE googleid = \'123456789012345678901\''));
+            const row = await(db.one(
+                'SELECT * FROM users WHERE googleid = \'123456789012345678901\''
+            ));
             assert.equal(row.googleid, '123456789012345678901');
             assert.isAbove(row.userid, maxUserId);
         }));
@@ -52,25 +55,29 @@ describe('Login integration', () => {
             const agent = supertest.agent(rewiredServer);
             await(lib.login(agent, '111111111122222222223'));
             const returnedID = await(agent.get('/getuseridtest').expect(200)).text;
-            const dbID = await(db.one('SELECT userid FROM users WHERE googleid=$1', ['111111111122222222223'])).userid;
+            const dbID = await(db.one(
+                'SELECT userid FROM users WHERE googleid=$1',
+                ['111111111122222222223']
+            )).userid;
             assert.isOk(returnedID);
             assert.isOk(dbID);
             assert.equal(dbID, returnedID);
         }));
     });
+
     describe('?li parameter setting', () => {
         it('should redirect from /?li to / when not logged in', async(() => {
             const agent = supertest.agent(server);
             const res = await(agent.get('/?li'));
             assert.equal(res.status, 302, 'did not give 302');
-            assert.equal(res.headers['location'], '/', 'did not redirect to /');
+            assert.equal(res.headers.location, '/', 'did not redirect to /');
         }));
         it('should redirect from / to /?li when logged in', async(() => {
             const agent = supertest.agent(server);
             await(lib.login(agent, '123456789012345678901'));
             const res = await(agent.get('/'));
             assert.equal(res.status, 302, 'did not give 302');
-            assert.equal(res.headers['location'], '/?li', 'did not redirect to /?li');
+            assert.equal(res.headers.location, '/?li', 'did not redirect to /?li');
         }));
     });
 });

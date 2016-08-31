@@ -1,7 +1,6 @@
 # To The Skies
 
 [![Build Status](https://semaphoreci.com/api/v1/markasoftware/to-the-skies/branches/master/badge.svg)](https://semaphoreci.com/markasoftware/to-the-skies)
-[![Code Climate](https://codeclimate.com/github/markasoftware/to-the-skies/badges/gpa.svg)](https://codeclimate.com/github/markasoftware/to-the-skies)
 [![Dependency Status](https://david-dm.org/markasoftware/to-the-skies.svg)](https://david-dm.org/markasoftware/to-the-skies)
 
 To The Skies is an extensible work of interactive fiction. Basically, that means it's a choose your own adventure game, but people can add on to the "tree" of choices, meaning it could potentially be extremely large, and people could spend hours playing before reaching any sort of ending.

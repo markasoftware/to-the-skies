@@ -1,20 +1,18 @@
+'use strict';
+
 const passport = require('passport');
 const router = require('express').Router();
-const promisify = require('promisify-es6');
-const googleStrategy = require('passport-google-oauth20');
+const GoogleStrategy = require('passport-google-oauth20');
 
-const lib = require('./lib/general.js');
+require('./lib/general.js');
 
-//ugh i need to do a url module thing soon
 const dbInt = require('./lib/db-interface.js');
 
-passport.use(new googleStrategy({
-        clientID: process.env.GOOGLECLIENTID||'aoeu',
-        clientSecret: process.env.GOOGLECLIENTSECRET||'aoeu',
-        callbackURL: 'http://' + (process.env.HOST_AND_PORT || 'localhost:1337') + '/auth/google/callback'
-    }, async.cps((at, rt, profile) => {
-        return await(dbInt.login(profile.id));
-    })
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID || 'aoeu',
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'aoeu',
+    callbackURL: `http://${process.env.HOST_AND_PORT || 'localhost:1337'}/auth/google/callback`,
+}, async.cps((at, rt, profile) => await(dbInt.login(profile.id)))
 ));
 
 passport.serializeUser((user, done) => {
@@ -33,20 +31,20 @@ router.get('/auth/google/init',
 );
 
 router.get('/auth/google/callback',
-    async((req, res) => {
-        if(process.env.NODE_ENV !== 'PRODUCTION'){
+    async((req, res, next) => {
+        if (process.env.NODE_ENV !== 'PRODUCTION' && req.query.id) {
             const userID = await(dbInt.login(req.query.id));
-            //for some reason promisifying doesn't work well with this
+            // for some reason promisifying doesn't work well with this
             await(new Promise((resolve, reject) => {
-                req.login(userID, function(e){
-                    if(e) reject(e);
+                req.login(userID, (e) => {
+                    if (e) reject(e);
                     else resolve();
-                })
+                });
             }));
             res.redirect('/');
-        }
+        } else next();
     }),
-    passport.authenticate('google', { failureRedirect: '/login', successRedirect: '/' })
+    passport.authenticate('google', { failureRedirect: '/', successRedirect: '/' })
 );
 
 module.exports = router;
