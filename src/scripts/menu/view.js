@@ -7,7 +7,7 @@ const m = require('mithril');
 module.exports = (ctrl) => {
     const toReturn = [
         m('.menu-row#close-icon-row', [
-            m('img#menu-close-icon[src=\'images/arrow.svg\']'),
+            m('img.menu-icon#close-menu-icon[src=\'images/arrow.svg\']'),
         ]),
     ];
     // if not logged in
@@ -20,20 +20,62 @@ module.exports = (ctrl) => {
     // if logged in
     } else {
         // the characters
-        characterList.getAll().forEach((curChar) => {
+        characterList.getAll().forEach((curChar, ind) => {
+            const menuRowChildren = [];
+            const isClicked = ctrl.clickedChar() === curChar.characterid();
+
+            if (isClicked) {
+                menuRowChildren.push(
+                    m('img.menu-icon[src=\'images/cancel.svg\']', {
+                        onclick: () => characterList.delete(curChar.characterid()),
+                    })
+                );
+            }
+
+            menuRowChildren.push(
+                m('span.a.padded-name', {
+                    onclick: () => { ctrl.clickedChar(isClicked ? null : curChar.characterid()); },
+                }, curChar.name())
+            );
+
+            if (isClicked) {
+                menuRowChildren.push(
+                    m('img.menu-icon[src=\'images/play.svg\']', {
+                        onclick: () => characterList.select(curChar.characterid()),
+                    })
+                );
+            }
+
             toReturn.push(
-                m('.menu-row', curChar.name())
+                m('.menu-row', {
+                    style: {
+                        order: curChar.position(),
+                    },
+                    key: curChar.characterid(),
+                }, menuRowChildren)
             );
         });
 
-        // the new button
-        toReturn.push(
-            m('.menu-row', [
-                m('img[src=\'images/plus.svg\']', {
-                    onclick: ctrl.newChar,
-                }),
-            ])
-        );
+        // has the + button been clicked?
+        if (ctrl.creating()) {
+            toReturn.push(
+                m('.menu-row', [
+                    m('input#create-input-field'),
+                    m('img.menu-icon[src=\'images/play.svg\']', {
+                        onclick: ctrl.finishNewCharacter,
+                    }),
+                ])
+            );
+        // if not, provide the + button
+        } else {
+            toReturn.push(
+                m('.menu-row', { style: { order: 1000 } }, [
+                    m('img.menu-icon#new-character-icon[src=\'images/plus.svg\']', {
+                        onclick: ctrl.startNewCharacter,
+                    }),
+                ])
+            );
+        }
     }
 
     return toReturn;

@@ -24,13 +24,16 @@ a:hover, .a:hover{
     height: 100vh;
     position: absolute;
 }
-#menu-icon{
+#left-menu-button{
     position: absolute;
     top: 2em;
     left: 1.5em;
     cursor: pointer;
-    transition: all .4s ease-in-out;
+    transition: transform .4s ease-in-out;
     width: 1.5em;
+}
+#left-menu-button.hidden-button{
+    transform: translateX(-3em);
 }
 #left-menu{
     display: flex;
@@ -43,15 +46,16 @@ a:hover, .a:hover{
     transition: all .4s ease-in-out;
     z-index: 100;
 }
-#menu-close-icon{
+.menu-icon{
     --close-icon-height: 6vh;
     height: var(--close-icon-height);
     position: relative;
-    /*there's probably a better way to do this, with a flexbox. But I don't really care*/
     top: calc((var(--menu-row-height) - var(--close-icon-height)) / 2);
+    cursor: pointer;
+}
+#close-menu-icon{
     transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
-    cursor: pointer;
 }
 #close-icon-row{
     order: -1;
@@ -65,4 +69,18 @@ a:hover, .a:hover{
     line-height: var(--menu-row-height);
     text-align: center;
     border-bottom: 2px solid #eee;
+}
+.padded-name{
+    margin: 0 1.5vw;
+}
+#new-character-icon{
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+}
+#create-input-field{
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+    text-align: center;
 }

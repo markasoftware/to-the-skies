@@ -27,7 +27,9 @@
     "sinon": "^1.17",
     "supertest": "^2.0.0",
     "supertest-as-promised": "^4.0.0",
-    "testdouble": "*"
+    "testdouble": "*",
+    "xhr-mock": "^1.6.0",
+    "xmlhttprequest-mock": "^2.0.0"
   },
   "dependencies": {
     "asyncawait": "^1.0.3",

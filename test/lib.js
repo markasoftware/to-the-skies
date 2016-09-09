@@ -21,6 +21,11 @@ module.exports.unCache = (url) => {
     }
 };
 
+module.exports.clearCache = () =>
+    Object.keys(require.cache).forEach((key) =>
+        delete require.cache[key]
+    );
+
 module.exports.throwErr = (err) => {
     throw err;
 };

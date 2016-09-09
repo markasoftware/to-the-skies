@@ -24,4 +24,14 @@ characterList.create = (name) =>
         privateList().push(propify(res))
     );
 
+const listeners = [];
+
+characterList.registerForChange = (listener) =>
+    listeners.push(listener);
+
+characterList.selectCharacter = (id) =>
+    listeners.forEach((curListener) =>
+        curListener(id)
+    );
+
 module.exports = characterList;

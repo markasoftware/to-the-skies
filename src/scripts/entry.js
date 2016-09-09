@@ -21,3 +21,7 @@ m.route(document.getElementById('main-wrap'), '/', {
 
 // mounting
 m.mount(document.getElementById('left-menu'), c.menu);
+
+// left menu opener
+// it should register event listeners when loaded
+require('./left-menu-opener.js');

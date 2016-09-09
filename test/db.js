@@ -162,7 +162,7 @@ describe('database', () => {
                 )).characterid;
                 assert.equal(returnedID, realID);
             }));
-                    
+                  
             it('should start at position 1', async(() => {
                 const userID = await(lib.newUser(db));
                 await(dbInt.characters.insert(userID, 'iaredatboi'));
