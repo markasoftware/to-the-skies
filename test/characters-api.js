@@ -93,4 +93,33 @@ describe('Character API', () => {
                 jsonRes[2].characterid);
         }));
     });
+    describe('delete', () => {
+        it('should give 401 when not logged in', async(() => {
+            const res = await(agent.get('/api/characters/delete?characterid=263'));
+            assert.equal(res.status, 401);
+        }));
+        it('should give 404 when the thing to delete does not exist', async(() => {
+            await(lib.login(agent, userID));
+            const res = await(agent.get('/api/characters/delete?characterid=7389'));
+            assert.equal(res.status, 404);
+        }));
+    });
+    describe('delete and create', () => {
+        it('should give 401 when accessing a different users character', async(() => {
+            await(lib.login(agent, userID));
+            const createdID = await(agent.get('/api/characters/create?name=dcrc')).characterid;
+            await(lib.login(agent, '123456789012345678900'));
+            const delRes = await(agent.get('/api/characters/delete?
+    describe('delete, create, and get', () => {
+        it('should delete the only thing and no longer return it with http 200', async(() => {
+            await(lib.login(agent, userID));
+            const createRes = await(agent.get('/api/characters/create?name=foop'));
+            const createdID = createRes.characterid;
+            const delRes = await(agent.get('/api/characters/delete?characterid=bloop'));
+            assert.equal(delRes.status, 200);
+            const getRes = await(agent.get('/api/characters/get'));
+            assert.equal(getRes.length, 0, 'no characters should be returned');
+        }));
+        it('should 
+    });
 });
