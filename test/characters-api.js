@@ -18,6 +18,10 @@ describe('Character API', () => {
 
     before(lib.resetDB);
 
+    function getCreatedId(createRes) {
+        return JSON.parse(createRes.text).characterid;
+    }
+
     describe('get', () => {
         it('should give a 401 when not logged in', async(() => {
             const res = await(agent.get('/api/characters/get'));
@@ -98,6 +102,11 @@ describe('Character API', () => {
             const res = await(agent.get('/api/characters/delete?characterid=263'));
             assert.equal(res.status, 401);
         }));
+        it('should give 400 when no characterid parameter', async(() => {
+            await(lib.login(agent, userID));
+            const res = await(agent.get('/api/characters/delete'));
+            assert.equal(res.status, 400);
+        }));
         it('should give 404 when the thing to delete does not exist', async(() => {
             await(lib.login(agent, userID));
             const res = await(agent.get('/api/characters/delete?characterid=7389'));
@@ -105,21 +114,42 @@ describe('Character API', () => {
         }));
     });
     describe('delete and create', () => {
-        it('should give 401 when accessing a different users character', async(() => {
+        it('should give 404 when accessing a different users character', async(() => {
             await(lib.login(agent, userID));
-            const createdID = await(agent.get('/api/characters/create?name=dcrc')).characterid;
+            const createdId = getCreatedId(await(agent.get('/api/characters/create?name=dcrc')));
             await(lib.login(agent, '123456789012345678900'));
-            const delRes = await(agent.get('/api/characters/delete?
+            const delRes = await(agent.get(`/api/characters/delete?characterid=${createdId}`));
+            assert.equal(delRes.status, 404);
+        }));
+        it('should give 200 when deleting a created character', async(() => {
+            await(lib.login(agent, userID));
+            const createdId = getCreatedId(await(agent.get('/api/characters/create?name=fooop')));
+            const delRes = await(agent.get(`/api/characters/delete?characterid=${createdId}`));
+            assert.equal(delRes.status, 200);
+        }));
+    });
     describe('delete, create, and get', () => {
         it('should delete the only thing and no longer return it with http 200', async(() => {
             await(lib.login(agent, userID));
-            const createRes = await(agent.get('/api/characters/create?name=foop'));
-            const createdID = createRes.characterid;
-            const delRes = await(agent.get('/api/characters/delete?characterid=bloop'));
+            const createdId = getCreatedId(await(agent.get('/api/characters/create?name=foop')));
+            const delRes = await(agent.get(`/api/characters/delete?characterid=${createdId}`));
             assert.equal(delRes.status, 200);
-            const getRes = await(agent.get('/api/characters/get'));
+            const getRes = JSON.parse(await(agent.get('/api/characters/get')).text);
             assert.equal(getRes.length, 0, 'no characters should be returned');
         }));
-        it('should 
+        it('should only delete the character with the specified id', async(() => {
+            await(lib.login(agent, userID));
+            const dontDeleteId = getCreatedId(await(agent.get(
+                '/api/characters/create?name=bloooo'
+            )));
+            const toDeleteId = getCreatedId(await(agent.get(
+                '/api/characters/create?name=harambe'
+            )));
+            await(agent.get(`/api/characters/delete?characterid=${toDeleteId}`));
+            const getRes = await(agent.get('/api/characters/get'));
+            const getResJson = JSON.parse(getRes.text);
+            assert.equal(getResJson.length, 1);
+            assert.equal(getResJson[0].characterid, dontDeleteId);
+        }));
     });
 });

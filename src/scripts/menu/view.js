@@ -2,12 +2,15 @@
 
 const storage = require('../models/storage.js');
 const characterList = require('../models/character-list.js');
+const closeMenu = require('../left-menu-opener.js');
 const m = require('mithril');
 
 module.exports = (ctrl) => {
     const toReturn = [
         m('.menu-row#close-icon-row', [
-            m('img.menu-icon#close-menu-icon[src=\'images/arrow.svg\']'),
+            m('img.menu-icon#close-menu-icon[src=\'images/arrow.svg\']', {
+                onclick: closeMenu,
+            }),
         ]),
     ];
     // if not logged in

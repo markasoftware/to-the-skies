@@ -65,6 +65,18 @@ module.exports.characters = {
             name,
         };
     }),
+    delete: async((userid, characterid) => {
+        const queryRes = await(db.result(
+            'DELETE FROM characters WHERE userid = $1 AND characterid = $2',
+            [userid, characterid]
+        ));
+        // just in case
+        if (queryRes.rowCount > 1) {
+            console.error('SERIOUS FUCKUP DETECTED!');
+            throw new Error('SERIOUS FUCKUP MULTIPLE ROWS DELETEDE');
+        }
+        return queryRes.rowCount === 1;
+    }),
 };
 
 

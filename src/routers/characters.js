@@ -25,4 +25,18 @@ router.get('/create', checkLogin, lib.wrap(async((req, res) => {
     res.status(200).json(characterData);
 })));
 
+router.get('/delete', checkLogin, lib.wrap(async((req, res) => {
+    if (!req.query.characterid) {
+        res.status(400).send('missing characterid query parameter');
+        return;
+    }
+    const queryCharacterid = req.query.characterid;
+    const didDelete = await(dbInt.characters.delete(req.user, Number(queryCharacterid)));
+    if (!didDelete) {
+        res.status(404).json('character does not exist or is not owned by you');
+        return;
+    }
+    res.status(200).json('success');
+})));
+
 module.exports = router;

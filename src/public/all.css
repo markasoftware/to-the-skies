@@ -29,11 +29,13 @@ a:hover, .a:hover{
     top: 2em;
     left: 1.5em;
     cursor: pointer;
-    transition: transform .4s ease-in-out;
+    transition: transform .3s linear;
     width: 1.5em;
+    cursor: pointer;
+    z-index: 100;
 }
 #left-menu-button.hidden-button{
-    transform: translateX(-3em);
+    transform: translateX(-6em);
 }
 #left-menu{
     display: flex;
@@ -42,9 +44,11 @@ a:hover, .a:hover{
     width: 16vw;
     position: absolute;
     height: 100vh;
-    left: -16vw;
-    transition: all .4s ease-in-out;
+    transition: transform .3s linear;
     z-index: 100;
+}
+#left-menu.hidden-menu{
+    transform: translateX(-20vw);
 }
 .menu-icon{
     --close-icon-height: 6vh;

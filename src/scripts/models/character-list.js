@@ -24,6 +24,14 @@ characterList.create = (name) =>
         privateList().push(propify(res))
     );
 
+characterList.delete = (characterid) => {
+    privateList().splice(
+        privateList().findIndex((cur) => cur.characterid === characterid),
+        1
+    );
+    storage.characters.delete(characterid);
+};
+
 const listeners = [];
 
 characterList.registerForChange = (listener) =>
