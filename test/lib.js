@@ -102,3 +102,13 @@ module.exports.login = (agent, id) =>
         .get(`/auth/google/callback?id=${id}`)
         .expect('set-cookie', /^connect\.sid=s.{20,}/)
         .expect(302);
+
+// characters API
+
+module.exports.getCreatedID = (createRes) =>
+    JSON.parse(createRes.text).characterid;
+
+module.exports.createCharacter = async((agent) =>
+    module.exports.getCreatedID(await(agent.get(
+        '/api/characters/create?name=boopfoop'
+    ))));
