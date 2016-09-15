@@ -11,7 +11,7 @@ CREATE TABLE paths (
 CREATE TABLE nodes (
     nodeid serial PRIMARY KEY,
     pathid int NOT NULL REFERENCES paths (pathid),
-    text varchar(150) NOT NULL,
+    content varchar(150) NOT NULL,
     options varchar(60)[] CHECK (array_length(options, 1) < 7) NOT NULL
 );
 CREATE TABLE node_coordinates (
@@ -35,7 +35,7 @@ CREATE TABLE characters (
 -- insert initial node
 INSERT INTO users (googleid) VALUES ('000000000000000000000');
 INSERT INTO paths (userid, name) VALUES (1, 'Default Path');
-INSERT INTO nodes (pathid, text, options) VALUES (1,
+INSERT INTO nodes (pathid, content, options) VALUES (1,
     'The ship floats upwards, to the skies.',
     ARRAY['This is option 1', 'This is option 2']
 );
