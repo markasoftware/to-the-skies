@@ -26,7 +26,7 @@
         "no-unused-vars": "off",
         "max-len": ["error", 100],
         "no-console": "off",
-        "global-require": "off"
-
+        "global-require": "off",
+        "camelcase": "off"
     }
 }

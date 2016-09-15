@@ -73,11 +73,22 @@ module.exports.characters = {
         // just in case
         if (queryRes.rowCount > 1) {
             console.error('SERIOUS FUCKUP DETECTED!');
-            throw new Error('SERIOUS FUCKUP MULTIPLE ROWS DELETEDE');
+            throw new Error('SERIOUS FUCKUP MULTIPLE ROWS DELETED');
         }
         return queryRes.rowCount === 1;
     }),
 };
 
+module.exports.nodes = {
+    getCurrent: async((characterid) =>
+         await(db.oneOrNone(
+            `SELECT text, options FROM nodes WHERE nodeid IN
+            (SELECT nodeid FROM characters WHERE characterid = $1);`,
+            [characterid]
+        ))
+    ),
+    getNext: async((characterid, option_index) => {
+    }),
+};
 
 module.exports.terminateConnections = () => { pgp.end(); };

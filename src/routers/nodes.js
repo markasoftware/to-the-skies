@@ -6,10 +6,11 @@ const mw = require('./lib/api-middleware.js');
 const router = require('express').Router();
 
 router.get('/get', mw.checkLogin, mw.checkParams('characterid'), (req, res) => {
+    let dbRes;
     if (req.query.options) {
-        // TODO
+        dbRes = dbInt.nodes.getNext(req.query.characterid, req.query.option_index);
     } else {
-        const dbRes = dbInt.nodes.getCurrent(req.query.characterid)
+        dbRes = dbInt.nodes.getCurrent(req.query.characterid);
     }
 });
 
