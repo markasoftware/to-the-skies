@@ -11,8 +11,12 @@ CREATE TABLE paths (
 CREATE TABLE nodes (
     nodeid serial PRIMARY KEY,
     pathid int NOT NULL REFERENCES paths (pathid),
-    content varchar(150) NOT NULL,
-    options varchar(60)[] CHECK (array_length(options, 1) < 7) NOT NULL
+    node_content varchar(150) NOT NULL
+);
+CREATE TABLE options (
+    optionid serial PRIMARY KEY,
+    nodeid int NOT NULL REFERENCES nodes (nodeid),
+    option_content varchar(60) NOT NULL
 );
 CREATE TABLE node_coordinates (
     nodeid int NOT NULL REFERENCES nodes (nodeid),
@@ -21,7 +25,7 @@ CREATE TABLE node_coordinates (
 );
 CREATE TABLE node_connections (
     in_nodeid int NOT NULL REFERENCES nodes (nodeid),
-    in_option_index int NOT NULL,
+    in_optionid int NOT NULL,
     out_nodeid int NOT NULL REFERENCES nodes (nodeid)
 );
 CREATE TABLE characters (
@@ -35,7 +39,12 @@ CREATE TABLE characters (
 -- insert initial node
 INSERT INTO users (googleid) VALUES ('000000000000000000000');
 INSERT INTO paths (userid, name) VALUES (1, 'Default Path');
-INSERT INTO nodes (pathid, content, options) VALUES (1,
-    'The ship floats upwards, to the skies.',
-    ARRAY['This is option 1', 'This is option 2']
+INSERT INTO nodes (pathid, node_content) VALUES (1,
+    'The ship floats upwards, to the skies.'
+);
+INSERT INTO options (nodeid, option_content) VALUES (1,
+    'This is option 1'
+);
+INSERT INTO options (nodeid, option_content) VALUES (1,
+    'This is option 2'
 );

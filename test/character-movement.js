@@ -4,7 +4,7 @@ const lib = require('./lib.js');
 const urls = require('./urls.js');
 const supertest = require('supertest-as-promised');
 
-describe('nodes other APIs', () => {
+describe('Character movement API', () => {
     before(lib.resetDB);
 
     const server = require(urls.server);

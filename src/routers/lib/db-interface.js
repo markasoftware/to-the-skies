@@ -79,15 +79,21 @@ module.exports.characters = {
     }),
 };
 
-module.exports.nodes = {
+module.exports.characterMovement = {
     getCurrent: async((characterid) =>
-         await(db.oneOrNone(
-            `SELECT text, options FROM nodes WHERE nodeid IN
-            (SELECT nodeid FROM characters WHERE characterid = $1);`,
-            [characterid]
+         await(db.query(`
+             SELECT nodes.node_content, options.option_content, options.optionid
+             FROM nodes JOIN options USING (nodeid)
+             WHERE nodeid IN (
+                SELECT nodeid FROM characters WHERE characterid = $1
+             );
+             `,
+             [characterid]
         ))
     ),
-    getNext: async((characterid, option_index) => {
+    getNextOptions: async((characterid, optionid) => {
+    }),
+    moveToNext: async((characterid, nodeid) => {
     }),
 };
 
