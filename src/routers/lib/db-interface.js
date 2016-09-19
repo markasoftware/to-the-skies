@@ -82,11 +82,11 @@ module.exports.characters = {
 module.exports.characterMovement = {
     getCurrent: async((characterid) =>
          await(db.query(`
-             SELECT nodes.node_content, options.option_content, options.optionid
+             SELECT nodes.content AS node_content, options.optionid, options.content AS option_content
              FROM nodes JOIN options USING (nodeid)
              WHERE nodeid IN (
                 SELECT nodeid FROM characters WHERE characterid = $1
-             );
+             )
              `,
              [characterid]
         ))

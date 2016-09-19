@@ -1,5 +1,5 @@
 if [ -z "$1" ] ; then
-    $0 cu su db lg nd ac an gs;
+    $0 cu su db lg nd ac am gs;
     exit $?;
 fi
 excode=0;
@@ -10,7 +10,7 @@ if [ "$1" == "help" ] ; then
     echo 'lg: Server-side Login Integration';
     echo 'nd: Server-side Integration without DB interaction';
     echo 'ac: Server-side Character API integration';
-    echo 'an: Server-side Nodes and Paths API integration';
+    echo 'am: Server-side Character movement integration';
     echo 'gs: Server-side general integration';
 else
     for testid in "$@"
@@ -21,7 +21,7 @@ else
             "lg") ttr="login.js" ;;
             "nd") ttr="no-db-server-integration.js" ;;
             "ac") ttr="characters-api.js" ;;
-            "an") ttr="nodes-paths-api.js" ;;
+            "am") ttr="character-movement.js" ;;
             "gs") ttr="general-server-integration.js"
         esac
     mocha "./test/$ttr"
