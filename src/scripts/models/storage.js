@@ -23,4 +23,13 @@ module.exports = {
             });
         },
     },
+    characterMovement: {
+        getCurrent(characterid) {
+            const queryString = m.route.buildQueryString({ characterid });
+            return m.request({
+                method: 'GET',
+                url: `api/character-movement/get-current?${queryString}`,
+            });
+        },
+    },
 };

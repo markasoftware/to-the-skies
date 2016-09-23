@@ -4,7 +4,10 @@ const storage = require('./storage.js');
 const propify = require('../lib/propifier.js');
 const m = require('mithril');
 
-const characterList = {};
+const characterList = {
+    charSelected: false,
+    selectedCharacterid: null,
+};
 
 const privateList = m.prop();
 
@@ -34,12 +37,15 @@ characterList.delete = (characterid) => {
 
 const listeners = [];
 
-characterList.registerForChange = (listener) =>
+characterList.registerSelectListener = (listener) =>
     listeners.push(listener);
 
-characterList.selectCharacter = (id) =>
+characterList.select = (id) => {
+    characterList.charSelected = true;
+    characterList.selectedCharacterid = id;
     listeners.forEach((curListener) =>
-        curListener(id)
+        curListener()
     );
+};
 
 module.exports = characterList;

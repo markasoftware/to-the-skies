@@ -36,6 +36,9 @@ module.exports.getRaw = (filePath) =>
 module.exports.getRandID = () =>
     chance.string({ length: 21, pool: '1234567890' });
 
+module.exports.getClasses = (vElt) =>
+    vElt.attrs.className.split(' ');
+
 // integration/routers
 
 module.exports.appify = (router) => {
@@ -104,6 +107,10 @@ module.exports.login = (agent, id) =>
         .expect(302);
 
 // characters API
+// i hate backwards compatibility
+
+module.exports.getCreatedpathid = (createRes) =>
+    JSON.parse(createRes.text).pathid;
 
 module.exports.getCreatedID = (createRes) =>
     JSON.parse(createRes.text).characterid;
@@ -111,4 +118,5 @@ module.exports.getCreatedID = (createRes) =>
 module.exports.createCharacter = async((agent) =>
     module.exports.getCreatedID(await(agent.get(
         '/api/characters/create?name=boopfoop'
+    // lol im coding in lisp
     ))));

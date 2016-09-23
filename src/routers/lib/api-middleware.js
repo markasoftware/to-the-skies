@@ -6,16 +6,13 @@ module.exports.checkLogin = (req, res, next) => {
     } else next();
 };
 
-module.exports.checkParams = (checkFor) =>
+module.exports.checkParams = (...checkFor) =>
     (req, res, next) => {
         let missingParameterFound = false;
-        let realCheckFor;
-        if (checkFor.forEach) realCheckFor = checkFor;
-        else realCheckFor = [checkFor];
-        for (let k = 0; k < realCheckFor.length; ++k) {
-            if (Object.keys(req.query).indexOf(realCheckFor[k]) === -1) {
+        for (let k = 0; k < checkFor.length; ++k) {
+            if (Object.keys(req.query).indexOf(checkFor[k]) === -1) {
                 res.status('400');
-                res.json(`missing ${realCheckFor[k]} query parameter`);
+                res.json(`missing ${checkFor[k]} query parameter`);
                 missingParameterFound = true;
                 break;
             }

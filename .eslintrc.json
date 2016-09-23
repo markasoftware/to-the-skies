@@ -27,6 +27,8 @@
         "max-len": ["error", 130],
         "no-console": "off",
         "global-require": "off",
-        "camelcase": "off"
+        "camelcase": "off",
+        "default-case": "off",
+        "func-names": "off"
     }
 }

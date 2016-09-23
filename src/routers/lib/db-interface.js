@@ -80,8 +80,8 @@ module.exports.characters = {
 };
 
 module.exports.characterMovement = {
-    getCurrent: async((characterid) =>
-         await(db.query(`
+    getCurrent: (characterid) =>
+         db.query(`
              SELECT nodes.content AS node_content, options.optionid, options.content AS option_content
              FROM nodes JOIN options USING (nodeid)
              WHERE nodeid IN (
@@ -89,12 +89,23 @@ module.exports.characterMovement = {
              )
              `,
              [characterid]
-        ))
-    ),
+        ),
     getNextOptions: async((characterid, optionid) => {
     }),
     moveToNext: async((characterid, nodeid) => {
     }),
+};
+
+module.exports.paths = {
+    getList: (userid) =>
+        db.query(`
+            SELECT pathid, name
+            FROM paths
+            WHERE userid = $1
+            `,
+            [userid]
+        ),
+
 };
 
 module.exports.terminateConnections = () => { pgp.end(); };

@@ -1,0 +1,56 @@
+#not-selected-wrapper {
+    position: absolute;
+    top: 30vh;
+    width: 100vw;
+    text-align: center;
+}
+#not-selected-wrapper h1 {
+    font-size: 64pt;
+    font-weight: lighter;
+}
+#not-selected-wrapper h2 {
+    font-size: 18pt;
+    margin: 3vmin;
+}
+
+#selected-wrapper {
+    position: absolute;
+    top: 20vh;
+    left: 15vw;
+    width: 70vw;
+    height: 70vh;
+}
+#selected-wrapper h1 {
+    position: absolute;
+    width: 72%;
+    left: 14%;
+    top: 0;
+    font-size: 48pt;
+    font-weight: lighter;
+}
+#options-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 30%;
+    bottom: 0;
+}
+#options-wrapper .option {
+    font-size: 20pt;
+    position: absolute;
+    width: 25%;
+}
+#options-wrapper .top {
+    top: 0;
+}
+#options-wrapper .bottom {
+    bottom: 0;
+}
+#options-wrapper .left {
+    left: 0;
+}
+#options-wrapper .right {
+    right: 0;
+}
+#options-wrapper .center {
+    left: 37.5%;
+}

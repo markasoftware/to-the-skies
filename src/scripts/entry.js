@@ -11,12 +11,17 @@ const c = {
         view: require('./menu/view.js'),
         controller: require('./menu/controller.js'),
     },
+    node: {
+        view: require('./node/view.js'),
+        controller: require('./node/controller.js'),
+    },
 };
 
 // routing
 m.route.mode = 'hash';
 m.route(document.getElementById('main-wrap'), '/', {
     '/': c.home,
+    '/play': c.node,
 });
 
 // mounting
