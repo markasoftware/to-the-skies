@@ -42,14 +42,31 @@ describe('Paths API', () => {
             const res = await(agent.get(`/api/paths/create?characterid=${characterid}&name=foopdatboopus`));
             assert.equal(res.status, 404);
         }));
-        it('should give 200 and some data when character exists, etc', async(() => {
+        it('should give 200 when character exists', async(() => {
             await(lib.login(agent, userID));
             const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=iamacatAMA')));
             const res = await(agent.get(`/api/paths/create?characterid=${characterid}&name=INSIDEbyPlaydead`));
             assert.equal(res.status, 200);
             const parsedRes = JSON.parse(res.text);
             assert.isNumber(parsedRes.pathid);
-            assert.equal(parsedRes.name, 'INSIDEbyPlaydead');
+        }));
+        it('should insert into the database properly', async(() => {
+            await(lib.login(agent, userID));
+            const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=waxel')));
+            const pathid = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=urmomlol`)));
+            // this will error if there isn't a row so we don't need extra checks
+            await(lib.db.one(`
+                SELECT *
+                FROM paths
+                WHERE name = 'urmomlol'
+                AND pathid = ${pathid}
+            `));
+            await(lib.db.one(`
+                SELECT *
+                FROM node_coordinates
+                WHERE pathid = ${pathid}
+                AND nodeid = 1
+            `));
         }));
     });
 
@@ -71,9 +88,9 @@ describe('Paths API', () => {
         it('should return a few created paths', async(() => {
             await(lib.login(agent, userID));
             const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=yyyyyyy')));
-            const path1id = lib.getCreatedpathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=pathone`)));
-            const path2id = lib.getCreatedpathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=imtwo`)));
-            const path3id = lib.getCreatedpathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=three`)));
+            const path1id = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=pathone`)));
+            const path2id = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=imtwo`)));
+            const path3id = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=three`)));
             const res = await(agent.get('/api/paths/get-list'));
             assert.equal(res.status, 200);
             const parsedRes = JSON.parse(res.text);

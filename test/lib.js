@@ -109,7 +109,7 @@ module.exports.login = (agent, id) =>
 // characters API
 // i hate backwards compatibility
 
-module.exports.getCreatedpathid = (createRes) =>
+module.exports.getCreatedPathid = (createRes) =>
     JSON.parse(createRes.text).pathid;
 
 module.exports.getCreatedID = (createRes) =>

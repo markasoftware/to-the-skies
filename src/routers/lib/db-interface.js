@@ -97,6 +97,48 @@ module.exports.characterMovement = {
 };
 
 module.exports.paths = {
+    create: async((userid, name, characterid) => {
+        let newPathid;
+        try {
+            await(db.tx(async(t => {
+                newPathid = await(t.one(`
+                    INSERT INTO paths
+                    (userid, name) VALUES ($1, $2)
+                    RETURNING pathid
+                    `,
+                    [userid, name]
+                )).pathid;
+                const oldPathid = await(t.one(`
+                    SELECT pathid
+                    FROM characters JOIN nodes USING (nodeid)
+                    WHERE characters.characterid = $2
+                    AND characters.userid = $1
+                    `,
+                    [userid, characterid]
+                )).pathid;
+                const oldPathNodes = await(t.query(`
+                    SELECT nodeid
+                    FROM nodes
+                    WHERE pathid = $1
+                    `,
+                    [oldPathid]
+                ));
+                oldPathNodes.forEach((cur) => {
+                    await(t.none(`
+                        INSERT INTO node_coordinates
+                        (pathid, nodeid, xpos, ypos) VALUES ($1, $2, 0, 0)
+                        `,
+                        [newPathid, cur.nodeid]
+                    ));
+                });
+            })));
+        } catch (e) {
+            return false;
+        }
+        return {
+            pathid: newPathid,
+        };
+    }),
     getList: (userid) =>
         db.query(`
             SELECT pathid, name

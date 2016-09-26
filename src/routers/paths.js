@@ -6,9 +6,16 @@ const dbInt = require('./lib/db-interface.js');
 
 const router = require('express').Router();
 
-router.get('/create', mw.checkLogin, mw.checkParams('characterid', 'name'), (req, res) => {
-    res.end();
-});
+router.get('/create', mw.checkLogin, mw.checkParams('characterid', 'name'), async((req, res) => {
+    const dbRes = await(dbInt.paths.create(req.user, req.query.name, req.query.characterid));
+    if (!dbRes) {
+        res.status(404);
+        res.json('The specified character either does not exist or is not owned by you');
+        return;
+    }
+    res.status(200);
+    res.json(dbRes);
+}));
 
 router.get('/get-list', mw.checkLogin, lib.wrap(async((req, res) => {
     const dbRes = await(dbInt.paths.getList(req.user));

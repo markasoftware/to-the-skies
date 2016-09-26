@@ -19,6 +19,7 @@ CREATE TABLE options (
     content varchar(60) NOT NULL
 );
 CREATE TABLE node_coordinates (
+    pathid int NOT NULL REFERENCES paths (pathid),
     nodeid int NOT NULL REFERENCES nodes (nodeid),
     xpos int NOT NULL,
     ypos int NOT NULL
