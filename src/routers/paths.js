@@ -6,7 +6,7 @@ const dbInt = require('./lib/db-interface.js');
 
 const router = require('express').Router();
 
-router.get('/create', mw.checkLogin, mw.checkParams('characterid', 'name'), async((req, res) => {
+router.get('/create', mw.checkLogin, mw.checkParams('characterid', 'name'), lib.wrap((req, res) => {
     const dbRes = await(dbInt.paths.create(req.user, req.query.name, req.query.characterid));
     if (!dbRes) {
         res.status(404);
@@ -17,10 +17,21 @@ router.get('/create', mw.checkLogin, mw.checkParams('characterid', 'name'), asyn
     res.json(dbRes);
 }));
 
-router.get('/get-list', mw.checkLogin, lib.wrap(async((req, res) => {
+router.get('/get-list', mw.checkLogin, lib.wrap((req, res) => {
     const dbRes = await(dbInt.paths.getList(req.user));
     res.status(200);
     res.json(dbRes);
-})));
+}));
+
+router.get('/publish', mw.checkLogin, mw.checkParams('pathid'), lib.wrap((req, res) => {
+    const dbRes = await(dbInt.paths.publish(req.user, req.query.pathid));
+    if (dbRes.rowCount === 0) {
+        res.status(404);
+        res.json('The specified path either a) does not exist b) is not owned by you or c) is already published');
+        return;
+    }
+    res.status(200);
+    res.json('success');
+}));
 
 module.exports = router;

@@ -55,12 +55,14 @@ describe('Paths API', () => {
             const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=waxel')));
             const pathid = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=urmomlol`)));
             // this will error if there isn't a row so we don't need extra checks
-            await(lib.db.one(`
+            const dbRes = await(lib.db.one(`
                 SELECT *
                 FROM paths
                 WHERE name = 'urmomlol'
                 AND pathid = ${pathid}
             `));
+            // should not be published
+            assert.strictEqual(dbRes.published, false);
             await(lib.db.one(`
                 SELECT *
                 FROM node_coordinates
@@ -68,6 +70,49 @@ describe('Paths API', () => {
                 AND nodeid = 1
             `));
         }));
+        describe('and publish', () => {
+            it('should give 401 when not logged in', async(() => {
+                const res = await(agent.get('/api/paths/publish?pathid=222'));
+                assert.equal(res.status, 401);
+            }));
+            it('should give 400 without pathid parameter', async(() => {
+                await(lib.login(agent, userID));
+                const res = await(agent.get('/api/paths/publish'));
+                assert.equal(res.status, 400);
+            }));
+            it('should give 404 when the pathid does not exist', async(() => {
+                await(lib.login(agent, userID));
+                const res = await(agent.get('/api/paths/publish?pathid=9999'));
+                assert.equal(res.status, 404);
+            }));
+            it('should give 404 when the path is owned by another player', async(() => {
+                // we'll just test against the default path
+                await(lib.login(agent, userID));
+                const res = await(agent.get('/api/paths/publish?pathid=1'));
+                assert.equal(res.status, 404);
+            }));
+            it('should give 200 and update database when run properly', async(() => {
+                await(lib.login(agent, userID));
+                const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=FOOP')));
+                const pathid = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=haha`)));
+                const res = await(agent.get(`/api/paths/publish?pathid=${pathid}`));
+                assert.equal(res.status, 200);
+                const dbRes = await(lib.db.one(`
+                    SELECT published
+                    FROM paths
+                    WHERE pathid = ${pathid}
+                `));
+                assert.strictEqual(dbRes.published, true);
+            }));
+            it('should give 404 if the path has already been published', async(() => {
+                await(lib.login(agent, userID));
+                const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=bapyouryap')));
+                const pathid = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=lrcg`)));
+                await(agent.get(`/api/paths/publish?pathid=${pathid}`));
+                const res = await(agent.get(`/api/paths/publish?pathid=${pathid}`));
+                assert.equal(res.status, 404);
+            }));
+        });
     });
 
     describe('get-list', () => {
@@ -108,24 +153,6 @@ describe('Paths API', () => {
                     name: 'three',
                 },
             ].sort());
-        }));
-    });
-
-    describe('get', () => {
-        it('should give 401 when not logged in', async(() => {
-            const res = await(agent.get('/api/paths/get?pathid=234'));
-            assert.equal(res.status, 401);
-        }));
-        // for some reason the following sentence is painful to read
-        it('should give 400 when missing required query param', async(() => {
-            await(lib.login(agent, userID));
-            const res = await(agent.get('/api/paths/get'));
-            assert.equal(res.status, 400);
-        }));
-    });
-
-    describe('create and get', () => {
-        it('should ', async(() => {
         }));
     });
 });

@@ -10,7 +10,7 @@ const util = require('util');
 module.exports.wrap = (fn) =>
     async((req, res, next) => {
         try {
-            await(fn(req, res, next));
+            await(async(fn)(req, res, next));
         } catch (e) {
             next(e);
         }

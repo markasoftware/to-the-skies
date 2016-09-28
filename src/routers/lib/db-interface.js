@@ -147,7 +147,16 @@ module.exports.paths = {
             `,
             [userid]
         ),
-
+    publish: (userid, pathid) =>
+        db.result(`
+            UPDATE paths
+            SET published = true
+            WHERE userid = $1
+            AND pathid = $2
+            AND published = false
+            `,
+            [userid, pathid]
+        ),
 };
 
 module.exports.terminateConnections = () => { pgp.end(); };

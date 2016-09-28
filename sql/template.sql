@@ -6,7 +6,8 @@ CREATE TABLE users (
 CREATE TABLE paths (
     pathid serial PRIMARY KEY,
     userid int NOT NULL REFERENCES users (userid),
-    name varchar(30) NOT NULL
+    name varchar(30) NOT NULL,
+    published boolean NOT NULL DEFAULT FALSE
 );
 CREATE TABLE nodes (
     nodeid serial PRIMARY KEY,

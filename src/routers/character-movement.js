@@ -6,7 +6,7 @@ const mw = require('./lib/api-middleware.js');
 const cmLogic = require('./logic/character-movement-logic.js');
 const router = require('express').Router();
 
-router.get('/get-current', mw.checkLogin, mw.checkParams('characterid'), async((req, res) => {
+router.get('/get-current', mw.checkLogin, mw.checkParams('characterid'), lib.wrap((req, res) => {
     const dbRes = await(dbInt.characterMovement.getCurrent(req.query.characterid));
     if (dbRes.length < 1) {
         res.status(404);
