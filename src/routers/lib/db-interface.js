@@ -139,6 +139,14 @@ module.exports.paths = {
             pathid: newPathid,
         };
     }),
+    delete: (userid, pathid) =>
+        db.result(`
+            DELETE FROM paths
+            WHERE userid = $1
+            AND pathid = $2
+            `,
+            [userid, pathid]
+        ),
     getList: (userid) =>
         db.query(`
             SELECT pathid, name

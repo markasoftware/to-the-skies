@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "asyncawait": "^1.0.3",
+    "bidirectional-map": "^1.0.3",
     "browserify": "^13.1.0",
     "chance": "^1.0.3",
     "dotenv": "^2.0.0",

@@ -16,18 +16,19 @@ CREATE TABLE nodes (
 );
 CREATE TABLE options (
     optionid serial PRIMARY KEY,
-    nodeid int NOT NULL REFERENCES nodes (nodeid),
+    nodeid int NOT NULL REFERENCES nodes (nodeid) ON DELETE CASCADE,
     content varchar(60) NOT NULL
 );
 CREATE TABLE node_coordinates (
-    pathid int NOT NULL REFERENCES paths (pathid),
-    nodeid int NOT NULL REFERENCES nodes (nodeid),
+    pathid int NOT NULL REFERENCES paths (pathid) ON DELETE CASCADE,
+    nodeid int NOT NULL REFERENCES nodes (nodeid) ON DELETE CASCADE,
     xpos int NOT NULL,
-    ypos int NOT NULL
+    ypos int NOT NULL,
+    PRIMARY KEY (pathid, nodeid)
 );
 CREATE TABLE node_connections (
-    optionid int NOT NULL,
-    out_nodeid int NOT NULL REFERENCES nodes (nodeid)
+    optionid int NOT NULL REFERENCES options (optionid) ON DELETE CASCADE,
+    out_nodeid int NOT NULL REFERENCES nodes (nodeid) ON DELETE CASCADE
 );
 CREATE TABLE characters (
     characterid serial PRIMARY KEY,

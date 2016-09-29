@@ -129,7 +129,7 @@ describe('Paths API', () => {
         }));
     });
 
-    describe('create and get-all', () => {
+    describe('create and get-list', () => {
         it('should return a few created paths', async(() => {
             await(lib.login(agent, userID));
             const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=yyyyyyy')));
@@ -154,5 +154,50 @@ describe('Paths API', () => {
                 },
             ].sort());
         }));
+    });
+
+    describe('delete', () => {
+        it('should give 401 when not logged in', async(() => {
+            const res = await(agent.get('/api/paths/delete?pathid=400'));
+            assert.equal(res.status, 401);
+        }));
+        it('should give 400 when missing pathid param', async(() => {
+            await(lib.login(agent, userID));
+            const res = await(agent.get('/api/paths/delete'));
+            assert.equal(res.status, 400);
+        }));
+        it('should give 404 if the given path does not exist', async(() => {
+            await(lib.login(agent, userID));
+            const res = await(agent.get('/api/paths/delete?pathid=6666'));
+            assert.equal(res.status, 404);
+        }));
+    });
+
+    describe('create, delete, and get-list', () => {
+        it('should give 404 when trying to delete somebody else\'s path', async(() => {
+            await(lib.login(agent, userID));
+            const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=aoeuhtnseuaohtns')));
+            const pathid = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=mnifaicfb`)));
+            await(lib.login(agent, lib.getRandID()));
+            const res = await(agent.get(`/api/paths/delete?pathid=${pathid}`));
+            assert.equal(res.status, 404);
+        }));
+        it('should create a couple paths, delete one, give 200, and no longer return it', async(() => {
+            await(lib.login(agent, userID));
+            const characterid = lib.getCreatedID(await(agent.get('/api/characters/create?name=aoeuhtnseuaohtns')));
+            // k is for keep, d is for delete
+            const kPathid = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=mnifaicfb`)));
+            const dPathid = lib.getCreatedPathid(await(agent.get(`/api/paths/create?characterid=${characterid}&name=bbtttrrr`)));
+            const delRes = await(agent.get(`/api/paths/delete?pathid=${dPathid}`));
+            assert.equal(delRes.status, 200);
+            const parsedRes = JSON.parse(await(agent.get('/api/paths/get-list')).text);
+            assert.deepEqual(parsedRes, [
+                {
+                    pathid: kPathid,
+                    name: 'mnifaicfb',
+                },
+            ]);
+        }));
+        // TODO: don't allow deletion of published paths
     });
 });
