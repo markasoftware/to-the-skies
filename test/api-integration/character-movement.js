@@ -1,7 +1,7 @@
 'use strict';
 
-const lib = require('./lib.js');
-const urls = require('./urls.js');
+const lib = require('../lib/lib.js');
+const urls = require('../lib/urls.js');
 const supertest = require('supertest-as-promised');
 
 describe('Character movement API', () => {

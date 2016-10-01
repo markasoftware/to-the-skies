@@ -1,6 +1,6 @@
 'use strict';
 
-const baseURL = `${__dirname}/../src/`;
+const baseURL = `${__dirname}/../../src/`;
 const routerURL = 'routers/';
 const libURL = 'lib/';
 const logicURL = 'logic/';

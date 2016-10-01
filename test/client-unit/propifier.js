@@ -1,7 +1,7 @@
 'use strict';
 
-require('./lib.js');
-const urls = require('./urls.js');
+require('../lib/lib.js');
+const urls = require('../lib/urls.js');
 
 describe('propifier', () => {
     const propify = require(urls.propifier);
