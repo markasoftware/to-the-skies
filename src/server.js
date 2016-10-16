@@ -22,9 +22,7 @@ app.use(session({
 app.use(require('./routers/login.js'));
 app.use(require('./routers/homepage.js'));
 app.use(require('./routers/browserify-bundle.js'));
-app.use('/api/characters', require('./routers/characters.js'));
-app.use('/api/character-movement', require('./routers/character-movement.js'));
-app.use('/api/paths', require('./routers/paths.js'));
+app.use('/api', require('./routers/lib/api-middleware.js').checkLogin, require('./routers/api.js'));
 
 app.use(express.static(`${__dirname}/public`));
 

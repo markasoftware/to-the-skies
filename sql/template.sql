@@ -26,9 +26,9 @@ CREATE TABLE node_coordinates (
     ypos int NOT NULL,
     PRIMARY KEY (pathid, nodeid)
 );
-CREATE TABLE node_connections (
+CREATE TABLE connections (
     optionid int NOT NULL REFERENCES options (optionid) ON DELETE CASCADE,
-    out_nodeid int NOT NULL REFERENCES nodes (nodeid) ON DELETE CASCADE
+    nodeid int NOT NULL REFERENCES nodes (nodeid) ON DELETE CASCADE
 );
 CREATE TABLE characters (
     characterid serial PRIMARY KEY,
@@ -40,7 +40,7 @@ CREATE TABLE characters (
 
 -- insert initial node
 INSERT INTO users (googleid) VALUES ('000000000000000000000');
-INSERT INTO paths (userid, name) VALUES (1, 'Default Path');
+INSERT INTO paths (userid, name, published) VALUES (1, 'Default Path', true);
 INSERT INTO nodes (pathid, content) VALUES (1,
     'The ship floats upwards, to the skies.'
 );

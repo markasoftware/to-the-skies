@@ -1,5 +1,5 @@
 if [ -z "$1" ] ; then
-    $0 cu su lg ac am ap gs;
+    $0 cu su lg ac am ap gs apm apmg;
     exit $?;
 fi
 excode=0;
@@ -12,6 +12,8 @@ if [ "$1" == "help" ] ; then
     echo 'am: Server-side Character movement integration';
     echo 'ap: Server-side Paths API integration';
     echo 'gs: Server-side general integration';
+    echo 'apm: Server-side Path Modification API Basic Integration';
+    echo 'apmg: Server-side Path Modification API Full Integration';
 else
     for testid in "$@"
     do
@@ -22,7 +24,9 @@ else
             "ac") ttr="api-integration/characters.js" ;;
             "am") ttr="api-integration/character-movement.js" ;;
             "ap") ttr="api-integration/paths.js" ;;
-            "gs") ttr="other/general-server-integration.js"
+            "gs") ttr="other/general-server-integration.js" ;;
+            "apm") ttr="api-integration/path-modification.js" ;;
+            "apmg") ttr="api-integration/path-modification-get.js" ;;
         esac
     mocha "./test/$ttr"
     lexcode=$?;

@@ -6,12 +6,12 @@ const dbInt = require('./lib/db-interface.js');
 
 const router = require('express').Router();
 
-router.get('/get', mw.checkLogin, lib.wrap((req, res) => {
+router.get('/get', lib.wrap((req, res) => {
     const returnedRows = await(dbInt.characters.get(req.user));
     res.status(200).json(returnedRows);
 }));
 
-router.get('/create', mw.checkLogin, mw.checkParams('name'), lib.wrap((req, res) => {
+router.get('/create', mw.checkParams('name'), lib.wrap((req, res) => {
     const queryName = req.query.name.toString();
     if (queryName.length > 30) {
         res.status(400).send('name query parameter too long');
@@ -21,7 +21,7 @@ router.get('/create', mw.checkLogin, mw.checkParams('name'), lib.wrap((req, res)
     res.status(200).json(characterData);
 }));
 
-router.get('/delete', mw.checkLogin, mw.checkParams('characterid'), lib.wrap((req, res) => {
+router.get('/delete', mw.checkParams('characterid'), lib.wrap((req, res) => {
     const queryCharacterid = req.query.characterid;
     const didDelete = await(dbInt.characters.delete(req.user, Number(queryCharacterid)));
     if (!didDelete) {

@@ -13,6 +13,8 @@ const conConfig = {
 
 const db = pgp(conConfig);
 
+module.exports.tx = db.tx;
+
 module.exports.login = async((googleID) => {
     if (typeof googleID !== 'string' || googleID.length !== 21) {
         throw Error('invalid google ID');
@@ -97,6 +99,18 @@ module.exports.characterMovement = {
 };
 
 module.exports.paths = {
+    checkIfExistsAndOwned: async((userid, pathid) => {
+        const res = await(db.one(`
+            SELECT COUNT(*)
+            FROM paths
+            WHERE pathid = $2
+            AND userid = $1
+            AND published = false
+            `,
+            [userid, pathid]
+        ));
+        return Number(res.count);
+    }),
     create: async((userid, name, characterid) => {
         let newPathid;
         try {
@@ -144,6 +158,7 @@ module.exports.paths = {
             DELETE FROM paths
             WHERE userid = $1
             AND pathid = $2
+            AND published = false
             `,
             [userid, pathid]
         ),
@@ -165,6 +180,115 @@ module.exports.paths = {
             `,
             [userid, pathid]
         ),
+};
+
+module.exports.pmod = {
+    // unfortunately there is some stuff here which I
+    // normally wouldn't want to put into the database
+    // layer, but because of transactions that's
+    // how we're going to do it
+    createNode: (pathid, optionid, content, options) =>
+        db.tx(async(t => {
+            /*
+            Here's what we have to do:
+            Insert the node into the nodes table
+            Insert the node into the node_coordinates table
+            Create both options
+            Create the opening connection to the new node
+            */
+            const toReturn = { optionids: [] };
+            toReturn.nodeid = await(t.one(`
+                INSERT INTO nodes
+                (pathid, content)
+                VALUES ($1, $2)
+                RETURNING nodeid
+                `,
+                [pathid, content]
+            )).nodeid;
+            await(t.none(`
+                INSERT INTO node_coordinates
+                (pathid, nodeid, xpos, ypos)
+                VALUES ($1, $2, $3, $4)
+                `,
+                [pathid, toReturn.nodeid, 0, 0]
+            ));
+            toReturn.optionids[0] = await(module.exports.pmod.createOption(
+                pathid, toReturn.nodeid, options[0], t
+            ));
+            toReturn.optionids[1] = await(module.exports.pmod.createOption(
+                pathid, toReturn.nodeid, options[1], t
+            ));
+            await(module.exports.pmod.createConnection(
+                pathid, optionid, toReturn.nodeid, t
+            ));
+
+            return toReturn;
+        })),
+
+    createOption: async((pathid, nodeid, content, t = db) => {
+        // make sure the node is in the given path, and by extension
+        // verify that it is owned by the correct user
+        const verifyRes = await(t.oneOrNone(`
+            SELECT 1
+            FROM nodes
+            WHERE pathid = $1
+            AND nodeid = $2
+            LIMIT 1
+            `,
+            [pathid, nodeid]
+        ));
+        if (!verifyRes) {
+            throw new Error('option not owned by node or not in path or something');
+        }
+        return await(t.oneOrNone(`
+            INSERT INTO options
+            (nodeid, content)
+            VALUES ($1, $2)
+            RETURNING optionid
+            `,
+            [nodeid, content]
+        )).optionid;
+    }),
+
+    createConnection: async((pathid, optionid, nodeid, t = db) => {
+        // verify that the option is on a node in the current path
+        // does NOT need to be owned by current user
+        const optionVerifyRes = await(t.oneOrNone(`
+            SELECT 1
+            FROM options
+            JOIN nodes USING (nodeid)
+            JOIN node_coordinates USING (nodeid)
+            WHERE node_coordinates.pathid = $1 AND optionid = $2
+            LIMIT 1
+            `,
+            [pathid, optionid]
+        ));
+        if (!optionVerifyRes) {
+            console.log('option verify fail');
+            throw new Error('option verification failed');
+        }
+        // verify that the node is owned by the current path
+        const nodeVerifyRes = await(t.one(`
+            SELECT 1
+            FROM nodes
+            WHERE pathid = $1 AND nodeid = $2
+            LIMIT 1
+            `,
+            [pathid, nodeid]
+        ));
+        if (!nodeVerifyRes) {
+            console.log('node verify fail');
+            throw new Error('node verification failed');
+        }
+        // insert the connection
+        const mainRes = await(t.none(`
+            INSERT INTO connections
+            (optionid, nodeid)
+            VALUES ($1, $2)
+            `,
+            [optionid, nodeid]
+        ));
+    }),
 };
 
 module.exports.terminateConnections = () => { pgp.end(); };
