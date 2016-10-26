@@ -19,10 +19,6 @@ describe('Character API', () => {
     before(lib.resetDB);
 
     describe('get', () => {
-        it('should give a 401 when not logged in', async(() => {
-            const res = await(agent.get('/api/characters/get'));
-            assert.equal(res.status, 401, 'status was not 401');
-        }));
         it('should return an empty array for new user', async(() => {
             await(lib.login(agent, userID));
             const res = await(agent.get('/api/characters/get'));
@@ -32,10 +28,6 @@ describe('Character API', () => {
         }));
     });
     describe('create', () => {
-        it('should give 401 without login', async(() => {
-            const res = await(agent.get('/api/characters/create?name=boop'));
-            assert.equal(res.status, 401, 'status was not 401');
-        }));
         it('should give a 400 without any query parameters', async(() => {
             await(lib.login(agent, userID));
             const res = await(agent.get('/api/characters/create'));
@@ -94,10 +86,6 @@ describe('Character API', () => {
         }));
     });
     describe('delete', () => {
-        it('should give 401 when not logged in', async(() => {
-            const res = await(agent.get('/api/characters/delete?characterid=263'));
-            assert.equal(res.status, 401);
-        }));
         it('should give 400 when no characterid parameter', async(() => {
             await(lib.login(agent, userID));
             const res = await(agent.get('/api/characters/delete'));

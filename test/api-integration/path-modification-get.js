@@ -7,14 +7,6 @@ const m = require('mithril');
 
 const supertest = require('supertest-as-promised');
 
-const genCreateOpts = (pathid, optionid, content, options) =>
-    `/api/pmod/nodes/create?${m.route.buildQueryString({
-        pathid,
-        optionid,
-        content,
-        options,
-    })}`;
-
 describe('path modification get', () => {
     let agent;
     let userID;
@@ -22,10 +14,10 @@ describe('path modification get', () => {
     beforeEach(() => {
         agent = supertest.agent(require(urls.server));
         userID = lib.getRandID();
+        await(lib.login(agent, userID));
     });
 
     it('should return empty for a new path', async(() => {
-        lib.login(agent, userID);
         const pathid = await(helpers.createCharAndPath(agent));
         const res = await(agent.get(`${baseUrl}?pathid=${pathid}`));
         assert.equal(res.status, 200);
@@ -44,7 +36,6 @@ describe('path modification get', () => {
     }));
     describe('with create', () => {
         it('should work with a couple created nodes', async(() => {
-            lib.login(agent, userID);
             const pathid = await(helpers.createCharAndPath(agent));
         }));
     });

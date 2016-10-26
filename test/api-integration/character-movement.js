@@ -21,10 +21,6 @@ describe('Character movement API', () => {
 
     describe('character movement only', () => {
         describe('get-current', () => {
-            it('should give 401 when not logged in', async(() => {
-                const res = await(agent.get(`${getCurrentUrl}?characterid=221`));
-                assert.equal(res.status, 401);
-            }));
             it('should give 404 for non-existing character', async(() => {
                 await(lib.login(agent, userID));
                 const res = await(agent.get(`${getCurrentUrl}?characterid=2892347`));
@@ -37,10 +33,6 @@ describe('Character movement API', () => {
             }));
         });
         describe('get-next', () => {
-            it('should give 401 when not logged in', async(() => {
-                const res = await(agent.get(`${getNextUrl}?charatterid=123&optionid=2`));
-                assert.equal(res.status, 401);
-            }));
             it('should give 404 for non-existant character', async(() => {
                 await(lib.login(agent, userID));
                 const res = await(agent.get(`${getNextUrl}?characterid=234234&optionid=1`));

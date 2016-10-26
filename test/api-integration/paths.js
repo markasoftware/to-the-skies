@@ -18,7 +18,6 @@ describe('Paths API', () => {
     before(lib.resetDB);
 
     describe('create and character API', () => {
-        it('should give 401 when not logged in', helpers.checkLogin('/api/paths/create?characterid=123&name=tttrho'));
         it('should give 400 without proper query parameters', async(() => {
             await(lib.login(agent, userID));
             // we don't need to do any extremely thorough testing here because
@@ -69,7 +68,6 @@ describe('Paths API', () => {
             `));
         }));
         describe('and publish', () => {
-            it('should give 401 when not logged in', helpers.checkLogin('/api/paths/publish?pathid=7'));
             it('should give 400 without pathid parameter', async(() => {
                 await(lib.login(agent, userID));
                 const res = await(agent.get('/api/paths/publish'));
@@ -109,10 +107,6 @@ describe('Paths API', () => {
     });
 
     describe('get-list', () => {
-        it('should give 401 when not logged in', async(() => {
-            const res = await(agent.get('/api/paths/get-list'));
-            assert.equal(res.status, 401);
-        }));
         it('should give 200 and empty array when logged in', async(() => {
             await(lib.login(agent, userID));
             const res = await(agent.get('/api/paths/get-list'));
@@ -150,10 +144,6 @@ describe('Paths API', () => {
     });
 
     describe('delete', () => {
-        it('should give 401 when not logged in', async(() => {
-            const res = await(agent.get('/api/paths/delete?pathid=400'));
-            assert.equal(res.status, 401);
-        }));
         it('should give 400 when missing pathid param', async(() => {
             await(lib.login(agent, userID));
             const res = await(agent.get('/api/paths/delete'));
